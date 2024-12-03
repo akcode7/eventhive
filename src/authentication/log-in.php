@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./src/css/output.css">
+    <link rel="stylesheet" href="../css/output.css">
     <script src="index.js"></script>
     <title>EventHive</title>
 </head>
@@ -45,7 +45,7 @@
           </a>
   
           <h1 class="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-            Welcome to Squid 🦑
+            Welcome to EventHive 🦑
           </h1>
   
           <p class="mt-4 leading-relaxed text-gray-500">

@@ -42,6 +42,9 @@
          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Event Date</h1>
          <p class=" text-lg text-gray-700 font-semibold">6 December 2024</p>
          <p class=" text-lg text-gray-700 font-semibold"> 2:30 pm</p>
+         <h1 class="text-black text-2xl font-bold rounded-lg my-2">Event Location</h1>
+         <p class=" text-lg text-gray-700 font-semibold">Floor 3, Room 314</p>
+         
 
          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Before You Join</h1>
          <p class=" text-lg text-gray-700 font-semibold">You should have react knowledge and a laptop</p>

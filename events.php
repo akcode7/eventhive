@@ -49,7 +49,7 @@
           </div>
       
           <div class="flex items-center justify-end">
-            <dt class="absolute  right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1">Join Event</dt>
+            <dt class="absolute  right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1">View Event</dt>
             
           </div>
         </dl>

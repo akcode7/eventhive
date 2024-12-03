@@ -25,7 +25,8 @@
                      </p>
                   </div>
                   <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                    <p class="text-lg font-bold text-teal-500 cursor-pointer">Edit</p>
+                    <p class="text-lg font-bold text-teal-500 px-2 cursor-pointer">Edit</p>
+                    <p class="text-lg font-bold text-blue-500 px-2 cursor-pointer">View</p>
                   </div>
                </div>
             </li>
@@ -43,7 +44,8 @@
                      </p>
                   </div>
                   <div class="inline-flex items-center text-base font-semibold text-gray-900 ">
-                     <p class="text-lg font-bold text-teal-500 cursor-pointer">Edit</p>
+                     <p class="text-lg font-bold text-teal-500 px-2 cursor-pointer">Edit</p>
+                    <p class="text-lg font-bold text-blue-500 px-2 cursor-pointer">View</p>
                   </div>
                </div>
             </li>

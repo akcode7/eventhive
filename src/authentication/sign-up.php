@@ -1,9 +1,77 @@
+<?php
+session_start();
+
+// Check if user is already logged in
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header("location: ../../index.php"); // Redirect to index.php if already logged in
+    exit();
+}
+?>
+
+<?php
+include '../config/db_connect.php';
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get input data
+    $name = $_POST['fullname'];
+    $email = $_POST['email'];
+    $password = md5($_POST['password']);
+    $username = $_POST['username'];
+    $marketingaccept = $_POST["marketing_accept"];
+     // Get the current Indian time
+     $indianTime = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
+     $currentIndianTime = $indianTime->format('Y-m-d H:i:s');
+
+
+    // Use prepared statement to prevent SQL injection
+    $sql = "INSERT INTO `users` (`name`, `email`, `password`, `username`, `joining_date`, `marketing_accept`) VALUES (?,?,?,?,?,?);";
+    $stmt = $conn->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param("ssssss", $name, $email, $password, $username, $currentIndianTime, $marketingaccept);
+
+    // Execute the statement
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+     
+      $_SESSION['loggedin'] = true;
+      $_SESSION['email'] = $email;
+      $_SESSION['join_date'] = $currentIndianTime;
+       
+    } else {
+        echo "insert error";
+    }
+
+    $stmt->close();
+
+    $sql = "SELECT * FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
+    $num = mysqli_num_rows($result);
+  
+    if ($num == 1) {
+        while ($row = mysqli_fetch_assoc($result)) {
+                $_SESSION['username'] = $row['username'];
+            }};
+
+}
+
+// Connection closed
+$conn->close();
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./src/css/output.css">
+    <link rel="stylesheet" href="../css/output.css">
     <script src="index.js"></script>
     <title>EventHive</title>
 </head>
@@ -36,7 +104,7 @@
           </a>
   
           <h2 class="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-            Welcome to Squid 🦑
+            Welcome to EventHive 🦑
           </h2>
   
           <p class="mt-4 leading-relaxed text-white/90">
@@ -70,7 +138,7 @@
             </a>
   
             <h1 class="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl md:text-4xl">
-              Welcome to Squid 🦑
+              Welcome to EventHive 🦑
             </h1>
   
             <p class="mt-4 leading-relaxed text-gray-500">
@@ -79,30 +147,32 @@
             </p>
           </div>
   
-          <form action="#" class="mt-8 grid grid-cols-6 gap-6">
+          <form method="post" class="mt-8 grid grid-cols-6 gap-6">
             <div class="col-span-6 sm:col-span-3">
-              <label for="FirstName" class="block text-sm font-medium text-gray-700">
+              <label for="FullName"  class="block text-sm font-medium text-gray-700">
                 Full Name
               </label>
   
               <input
                 type="text"
-                id="FirstName"
-                name="first_name"
+                id="Name"
+                name="fullname"
                 class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                required=""
               />
             </div>
   
             <div class="col-span-6 sm:col-span-3">
-              <label for="LastName" class="block text-sm font-medium text-gray-700">
+              <label for="username" class="block text-sm font-medium text-gray-700">
                 Username
               </label>
   
               <input
                 type="text"
                 id="LastName"
-                name="last_name"
+                name="username"
                 class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                required=""
               />
             </div>
   
@@ -114,6 +184,7 @@
                 id="Email"
                 name="email"
                 class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                required=""
               />
             </div>
   
@@ -125,6 +196,7 @@
                 id="Password"
                 name="password"
                 class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                required=""
               />
             </div>
   
@@ -136,17 +208,24 @@
               <input
                 type="password"
                 id="PasswordConfirmation"
-                name="password_confirmation"
+                
                 class="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                required=""
               />
+              <p id="cnf-error" class="mt-2 hidden text-red-600 font-semibold">Password not matched</p>
             </div>
-  
+            <div class="col-span-6 sm:col-span-3">
+            <input class="cursor-pointer mx-2 border border-gray-300 rounded bg-gray-50" type="checkbox" onclick="viewpass()">Show Password
+            </div>
+
+           
             <div class="col-span-6">
               <label for="MarketingAccept" class="flex gap-4">
                 <input
                   type="checkbox"
                   id="MarketingAccept"
                   name="marketing_accept"
+                  value="on"
                   class="size-5 rounded-md border-gray-200 bg-white shadow-sm"
                 />
   
@@ -166,7 +245,7 @@
             </div>
   
             <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
-              <button
+              <button type="submit" id="sub-btn" onclick="passcheck()"
                 class="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
               >
                 Create an account
@@ -174,7 +253,7 @@
   
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
                 Already have an account?
-                <a href="#" class="text-gray-700 underline">Log in</a>.
+                <a href="log-in.php" class="text-gray-700 underline">Log in</a>.
               </p>
             </div>
           </form>
@@ -182,5 +261,37 @@
       </main>
     </div>
   </section>
+
+
+  <script>
+     let p = document.getElementById("Password");
+     let cp = document.getElementById("PasswordConfirmation");
+    function viewpass() {
+     
+      if (p.type === "password" && cp.type === "password") {
+        p.type = "text";
+        cp.type = "text";
+      } else {
+        p.type = "password";
+        cp.type = "password";
+      }
+    }
+
+
+
+
+function passcheck() {
+  let subbtn = document.getElementById("sub-btn");
+  let cnferror = document.getElementById("cnf-error");
+  if (p.value === cp.value) {
+    subbtn.type = "submit"; 
+    cnferror.classList.add("hidden");
+  } else {
+    subbtn.type = "button";
+    cnferror.classList.remove("hidden");
+  }
+}
+</script>
+
 </body>
 </html>

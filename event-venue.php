@@ -9,13 +9,13 @@
 </head>
 <style>
      .events-venu{
-            background-repeat: no-repeat;
-            background-position: center;
-            padding: 20px 0px;
-            background-size: cover;
-           
+        background-repeat: no-repeat;
+        background-position: center;
+        padding: 20px 0px;
+        background-size: cover;
+        
 
-        }
+    }
 </style>
 <body>
     <form action="create-events.php" method="GET">

@@ -1,4 +1,50 @@
-<?php include 'src/config/db_connect.php';?>
+<?php include 'src/config/db_connect.php';
+
+$sql = "SELECT DISTINCT event_location FROM event_detail WHERE event_status = 'approved'";
+$result = $conn->query($sql);
+
+$eventLocations = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $eventLocations[] = $row['event_location'];
+    }
+} else {
+    echo "No approved events found.";
+}
+
+$coordinates = [];
+foreach ($eventLocations as $location) {
+    $stmt = $conn->prepare("SELECT name, coordinate FROM places WHERE name = ?");
+    $stmt->bind_param("s", $location);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+    
+            $coords = explode(',', $row['coordinate']);
+            
+            $coordinates[] = [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [(float)$coords[0], (float)$coords[1]] 
+                ],
+                'properties' => [
+                    'name' => $row['name']
+                ]
+            ];
+        }
+    }
+}
+
+$geojson = json_encode([
+    'type' => 'FeatureCollection',
+    'features' => $coordinates
+]);
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,7 +160,7 @@
               <dt class="text-sm font-medium text-gray-600">Event Date</dt>
             </div>
             <div class="flex items-center justify-end">
-              <a href="event-details?id=<?php echo $row['event_id']?>">
+              <a href="event-details.php?id=<?php echo $row['event_id']?>">
                 <dt class="absolute right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1">View Event</dt>
               </a>
             </div>
@@ -123,8 +169,8 @@
       </div>
       
       <?php
-                }
-            ?>
+          }
+      ?>
     </div>
   </div>
 
@@ -132,16 +178,14 @@
     // Mapbox access token
     mapboxgl.accessToken = 'pk.eyJ1IjoidGhlLW1hcC1tYWtlciIsImEiOiJjbTQ3bnVleTEwN3d5MmxweHI2d21sc2lxIn0.ybOGD3OUFJrDOMMWszY8Rg';
 
-    // Create a new Mapbox map
     const map = new mapboxgl.Map({
-      container: 'map', // Map container ID
-      style: 'mapbox://styles/mapbox/dark-v10', // Use Mapbox's dark style
-      center: [81.05907530791517, 26.888545268230786], // Center map to BBD University coordinates
-      zoom: 16 // Zoom level for the area
+      container: 'map', 
+      style: 'mapbox://styles/mapbox/dark-v10', 
+      center: [81.05907530791517, 26.888545268230786], 
+      zoom: 16 
     });
 
     map.on('load', function() {
-      // Remove the static circle layer ('bbd-points')
       if (map.getLayer('bbd-points')) {
         map.removeLayer('bbd-points');
       }
@@ -149,106 +193,28 @@
         map.removeSource('bbd-locations');
       }
 
-      // Define new GeoJSON data for the new points (BBD University, H-Block, and Stadium)
-      const coordinates = {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05907530791517, 26.888545268230786] // BBD University
-            },
-            properties: {
-              name: 'BBD University'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05664708398355, 26.888009352239074] // BBD University H-Block
-            },
-            properties: {
-              name: 'BBD ITM'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.0591415382849, 26.887277324040436] // BBD University H-Block
-            },
-            properties: {
-              name: 'BBD University H-Block'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05872662077684, 26.88394252413874] // BBD Stadium
-            },
-            properties: {
-              name: 'BBD Stadium'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05888077561306, 26.886005155255123] // BBD Auditorium
-            },
-            properties: {
-              name: 'BBD Auditorium'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05800118795383, 26.887754807626173] // Canteen
-            },
-            properties: {
-              name: 'Canteen'
-            }
-          },
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'Point',
-              coordinates: [81.05766195622938, 26.887001959587472] // ECE Building
-            },
-            properties: {
-              name: 'BBDEC'
-            }
-          },
-        ]
-      };
+      const coordinates = <?php echo $geojson; ?>;
 
-      // Add custom markers with the ping animation effect
       coordinates.features.forEach((feature) => {
         const el = document.createElement('div');
         el.className = 'marker';
 
-        // Create the ping element
+        // ping element
         const pingElement = document.createElement('div');
         pingElement.className = 'marker-ping';
         el.appendChild(pingElement);
 
-        // Add the custom marker to the map
         new mapboxgl.Marker(el)
           .setLngLat(feature.geometry.coordinates)
           .setPopup(new mapboxgl.Popup().setHTML(`<h3>${feature.properties.name}</h3>`))
           .addTo(map);
       });
 
-      // Change the cursor to a pointer when hovering over a marker
+      // pointer 
       map.on('mouseenter', 'bbd-points', function() {
         map.getCanvas().style.cursor = 'pointer';
       });
 
-      // Change it back to default when not hovering over the marker
       map.on('mouseleave', 'bbd-points', function() {
         map.getCanvas().style.cursor = '';
       });

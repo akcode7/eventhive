@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mapbox Live Geolocation Tracking</title>
+  <title>Mapbox Dark Mode with User Location</title>
   <!-- Include Mapbox GL JS stylesheet -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
   <!-- Include Mapbox GL JS script -->
@@ -14,6 +14,38 @@
       height: 500px;
       width: 100%;
     }
+
+    /* animation for marker */
+    .animate-ping {
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes ping {
+      100% {
+        transform: scale(5);  
+        opacity: 0;            
+      }
+    }
+
+    .marker {
+      position: relative;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255, 0, 0, 0.969);
+    }
+
+    .marker-ping {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: rgba(230, 9, 9, 0.769);
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
   </style>
 </head>
 <body>
@@ -21,38 +53,36 @@
   <div id="map"></div>
 
   <script>
-    //access token from https://codepen.io/adamxmartin/pen/ByBoBOe
+    // Access token from Mapbox
     mapboxgl.accessToken = 'pk.eyJ1IjoidGhlLW1hcC1tYWtlciIsImEiOiJjbTQ3bnVleTEwN3d5MmxweHI2d21sc2lxIn0.ybOGD3OUFJrDOMMWszY8Rg';
 
-    // Initialize the map with default coordinates (BBD University)
+    // Center map on BBD University coordinates
+    const bbdUniversityCoordinates = [81.05907530791517, 26.888545268230786];
+
     const map = new mapboxgl.Map({
       container: 'map', // Map container ID
-      style: 'mapbox://styles/the-map-maker/cm47odyvf01d601rw17b3fp9c', // Map style URL
-      center: [81.05907530791517, 26.888545268230786], // Default center (BBD University)
-      zoom: 16 // Zoom level
+      style: 'mapbox://styles/mapbox/dark-v10', // Use Mapbox's dark style
+      center: bbdUniversityCoordinates, // Center map on BBD University
+      zoom: 18 // Zoom level for the area
     });
 
-    // Initialize marker for the current location
-    let userMarker = new mapboxgl.Marker()
-      .setPopup(new mapboxgl.Popup().setHTML('<h3>Your Current Location</h3>'))
-      .addTo(map);
-
-    // Function to update the user's location on the map
-    function updateLocation(position) {
+    // Function to show the user's current location on the map
+    function showCurrentLocation(position) {
       const userLatitude = position.coords.latitude;
       const userLongitude = position.coords.longitude;
 
-      // Update the map's center to the new position
-      map.setCenter([userLongitude, userLatitude]);
-
-      // Update the marker position
-      userMarker.setLngLat([userLongitude, userLatitude]);
+      // Add a marker for the user's current location
+      new mapboxgl.Marker({ color: 'blue' })
+        .setLngLat([userLongitude, userLatitude])
+        .setPopup(new mapboxgl.Popup().setHTML('<h3>Your Current Location</h3>'))
+        .addTo(map);
     }
 
-    // Watch the user's position and update the map as the user moves
+    // Get the user's current location once
     if (navigator.geolocation) {
-      const watchId = navigator.geolocation.watchPosition(updateLocation, function(error) {
+      navigator.geolocation.getCurrentPosition(showCurrentLocation, function(error) {
         console.error("Error getting geolocation:", error);
+        alert("Unable to retrieve your location.");
       }, {
         enableHighAccuracy: true, // Request high accuracy
         maximumAge: 0,            // Do not use cached position
@@ -63,7 +93,7 @@
     }
 
     map.on('load', function() {
-      // Remove existing layers (e.g., olg-winners layer, Lucknow points)
+      // Remove existing layers (e.g., old layers)
       if (map.getLayer('lucknow-points')) {
         map.removeLayer('lucknow-points');
       }
@@ -71,7 +101,7 @@
         map.removeSource('lucknow');
       }
 
-      // Define new GeoJSON data for the new points (BBD University, H-Block, Stadium, and Auditorium)
+      // Define new GeoJSON data for the new points (BBD University, H-Block, and Stadium)
       const coordinates = {
         type: 'FeatureCollection',
         features: [
@@ -89,7 +119,7 @@
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [81.05912358769409, 26.887344362441215] // BBD University H-Block
+              coordinates: [81.05906971009962, 26.888803916165653] // BBD University H-Block
             },
             properties: {
               name: 'BBD University H-Block'
@@ -109,12 +139,32 @@
             type: 'Feature',
             geometry: {
               type: 'Point',
-              coordinates: [81.05879861272237, 26.885361339438756] // BBD Auditorium
+              coordinates: [81.05879821547096, 26.885396994585193] // Correct order: [longitude, latitude]
             },
             properties: {
               name: 'BBD Auditorium'
             }
-          }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05800118795383, 26.887754807626173] // Correct order: [longitude, latitude]
+            },
+            properties: {
+              name: 'Canteen'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05766195622938, 26.887001959587472] // Correct order: [longitude, latitude]
+            },
+            properties: {
+              name: 'ECE'
+            }
+          },
         ]
       };
 
@@ -130,11 +180,25 @@
         type: 'circle',
         source: 'bbd-locations',
         paint: {
-          'circle-radius': 10, // Radius of the dots
-          'circle-color': '#FF6347', // Color of the dots (Tomato)
-          'circle-stroke-color': '#ffffff', // Stroke color (white)
-          'circle-stroke-width': 2 // Stroke width
+          'circle-radius': 0, // No visible circle on the map
         }
+      });
+
+      // Add markers with animated effect
+      coordinates.features.forEach(function(feature) {
+        const el = document.createElement('div');
+        el.className = 'marker';
+        
+        const pingEl = document.createElement('div');
+        pingEl.className = 'marker-ping';
+
+        el.appendChild(pingEl); // Add the ping animation to the marker
+
+        // Create a marker with the custom HTML element
+        new mapboxgl.Marker(el)
+          .setLngLat(feature.geometry.coordinates)
+          .setPopup(new mapboxgl.Popup().setHTML('<h3>' + feature.properties.name + '</h3>'))
+          .addTo(map);
       });
 
       // Add a popup when clicking on a dot (show name of the location)

@@ -1,16 +1,17 @@
 
 <?php
-session_start();
+include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
 
-if (isset($_SESSION['email'])) {
-    // Session already exists, user is identified
-    $email = $_SESSION['email'];
-   
-} else {
-    // No session exists, user needs to log in or register
-    header("location: ../authentication/login.php"); // Replace 'login.php' with the actual login page
+$slug = isset($_GET['id']) ? trim($_GET['id'], '/') : '';
+
+if (empty($slug)) {
+    // header("Location: ../");
+    echo "error: Event id is missing";
     exit();
 }
+
+
 ?>
 
 <!DOCTYPE html>
@@ -23,31 +24,21 @@ if (isset($_SESSION['email'])) {
     <title>EventHive</title>
 </head>
 <body>
-<?php include 'src/config/db_connect.php';
 
-// Check if the user is logged in
-if (isset($_SESSION['username'])) {
-    // Get the user ID from the session
-    $sessionUserName = $_SESSION['username'];
- 
-    // Query to select user data based on user_id from the session
-    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
-    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
-
-    // Check if there are any rows returned from the query
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-      
+    <?php
+    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_id` = '$slug' AND `event_status` = 'approved'");
+    while($row = mysqli_fetch_assoc($sql)){
 ?>
-    <div class="container p-5">
+ 
+    <div class="container mx-auto p-5">
         <img
     alt=""
     src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
     class="h-64 w-full object-cover sm:h-80 lg:h-96 rounded-xl"
      />
         <h1 class="bg-yellow-400 text-black py-3 text-3xl font-bold rounded-lg my-2 px-2"><?php echo $row['event_name']?></h1>
-        <p class="mt-2 max-w-sm text-lg text-gray-700 font-semibold">
-        <?php echo $row['event_discription']?>
+        <p class="mt-2 text-lg text-gray-700 font-semibold">
+        <?php echo $row['event_description']?>
           </p>
           <h1 class="text-black text-2xl font-bold rounded-lg my-2"><?php echo $row['event_type']?></h1>
           <p class="mt-2 max-w-sm text-lg text-gray-700 font-semibold">
@@ -84,7 +75,7 @@ if (isset($_SESSION['username'])) {
     </div>
 
     <?php
-  }}}
+  }
   ?>
 </body>
 </html>

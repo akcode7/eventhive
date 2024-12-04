@@ -1,0 +1,259 @@
+<?php include 'src/config/db_connect.php';?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- CSS -->
+  <link rel="stylesheet" href="src/css/output.css">
+  <!-- FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+  <!-- Include Mapbox GL JS stylesheet -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- Include Mapbox GL JS script -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+  <title>Mapbox Dark Mode</title>
+  <style>
+      *{
+        margin:0;
+        padding:0;
+        font-family: "ZCOOL XiaoWei", sans-serif;
+        }
+    /* map */
+     @media (max-width: 1279px) { 
+        .map {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 55vh; 
+          z-index: -1; 
+        }
+        .cards-section {
+        position: relative;
+        z-index: 1; 
+        overflow-y: scroll;
+        height: calc(100vh - 55vh); 
+      }
+        
+    }
+
+    /* animation for marker */
+    .animate-ping {
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes ping {
+      100% {
+        transform: scale(5);  
+        opacity: 0;            
+      }
+    }
+
+    .marker {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: rgba(255, 0, 0, 0.969);
+    }
+
+    .marker-ping {
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: rgba(230, 9, 9, 0.769);
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid grid-cols-2 xl:h-screen">
+    <!-- Map Section -->
+    <div class="col-span-2 xl:col-span-1 h-[55vh] xl:h-screen map-container">
+      <div id="map" class="h-full"></div>
+    </div>
+    <!-- Cards Section -->
+    <div class="col-span-2 xl:col-span-1 xl:px-10 xl:py-12 overflow-y-scroll cards-section pt-3 pb-8 px-4">
+      <?php
+          $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE `event_status` = 'approved' ORDER BY `sno` DESC");
+          while($row = mysqli_fetch_assoc($sql)){
+      ?>
+      <!-- Card -->
+      <div class="relative mt-3 mb-8">
+        <div class="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8 shadow-xl">
+          <span class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+          <div class="flex justify-between">
+            <div class="px-2 overflow-wrap">
+              <h3 class="text-lg font-bold text-gray-900 sm:text-xl break-words"><?php echo $row['event_name']?></h3>
+              <p class="mt-1 text-xs font-semibold text-gray-800">@<?php echo $row['user_name']?></p>
+            </div>
+            <div class="px-2">
+              <img alt="" src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80" class="size-16 rounded-lg object-cover shadow-sm"/>
+            </div>
+          </div>
+          <div class="mt-4 px-2">
+            <p class="text-pretty text-sm text-gray-500">
+              <?php 
+                  $max_length = 180;
+                  $post_title = $row['event_description'];
+                  if (strlen($post_title) > $max_length) {
+                      $post_title = substr($post_title, 0, $max_length) . '...';
+                  }
+                  echo $post_title
+              ?>
+            </p>
+          </div>
+          <dl class="mt-6 flex gap-4 sm:gap-6 px-2">
+            <div class="flex flex-col-reverse">
+              <dd class="text-xs text-gray-500"><?php echo $row['event_date'];?></dd>
+              <dt class="text-sm font-medium text-gray-600">Event Date</dt>
+            </div>
+            <div class="flex items-center justify-end">
+              <a href="event-details?id=<?php echo $row['event_id']?>">
+                <dt class="absolute right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1">View Event</dt>
+              </a>
+            </div>
+          </dl>
+        </div>
+      </div>
+      
+      <?php
+                }
+            ?>
+    </div>
+  </div>
+
+  <script>
+    // Mapbox access token
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGhlLW1hcC1tYWtlciIsImEiOiJjbTQ3bnVleTEwN3d5MmxweHI2d21sc2lxIn0.ybOGD3OUFJrDOMMWszY8Rg';
+
+    // Create a new Mapbox map
+    const map = new mapboxgl.Map({
+      container: 'map', // Map container ID
+      style: 'mapbox://styles/mapbox/dark-v10', // Use Mapbox's dark style
+      center: [81.05907530791517, 26.888545268230786], // Center map to BBD University coordinates
+      zoom: 16 // Zoom level for the area
+    });
+
+    map.on('load', function() {
+      // Remove the static circle layer ('bbd-points')
+      if (map.getLayer('bbd-points')) {
+        map.removeLayer('bbd-points');
+      }
+      if (map.getSource('bbd-locations')) {
+        map.removeSource('bbd-locations');
+      }
+
+      // Define new GeoJSON data for the new points (BBD University, H-Block, and Stadium)
+      const coordinates = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05907530791517, 26.888545268230786] // BBD University
+            },
+            properties: {
+              name: 'BBD University'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05664708398355, 26.888009352239074] // BBD University H-Block
+            },
+            properties: {
+              name: 'BBD ITM'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.0591415382849, 26.887277324040436] // BBD University H-Block
+            },
+            properties: {
+              name: 'BBD University H-Block'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05872662077684, 26.88394252413874] // BBD Stadium
+            },
+            properties: {
+              name: 'BBD Stadium'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05888077561306, 26.886005155255123] // BBD Auditorium
+            },
+            properties: {
+              name: 'BBD Auditorium'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05800118795383, 26.887754807626173] // Canteen
+            },
+            properties: {
+              name: 'Canteen'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05766195622938, 26.887001959587472] // ECE Building
+            },
+            properties: {
+              name: 'BBDEC'
+            }
+          },
+        ]
+      };
+
+      // Add custom markers with the ping animation effect
+      coordinates.features.forEach((feature) => {
+        const el = document.createElement('div');
+        el.className = 'marker';
+
+        // Create the ping element
+        const pingElement = document.createElement('div');
+        pingElement.className = 'marker-ping';
+        el.appendChild(pingElement);
+
+        // Add the custom marker to the map
+        new mapboxgl.Marker(el)
+          .setLngLat(feature.geometry.coordinates)
+          .setPopup(new mapboxgl.Popup().setHTML(`<h3>${feature.properties.name}</h3>`))
+          .addTo(map);
+      });
+
+      // Change the cursor to a pointer when hovering over a marker
+      map.on('mouseenter', 'bbd-points', function() {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to default when not hovering over the marker
+      map.on('mouseleave', 'bbd-points', function() {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+  </script>
+
+</body>
+</html>

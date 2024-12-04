@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $email = $_POST['email'];
   $password = $_POST['password'];
-  $sql = "SELECT * FROM users WHERE email='$email'";
+  $sql = "SELECT * FROM user_detail WHERE email='$email'";
   $result = mysqli_query($conn, $sql);
   $num = mysqli_num_rows($result);
 

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapbox Dark Mode</title>
+  <!-- Include Mapbox GL JS stylesheet -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- Include Mapbox GL JS script -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+  <style>
+    /* Ensure the map container has a defined size */
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <script>
+    //access token from https://codepen.io/adamxmartin/pen/ByBoBOe
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGhlLW1hcC1tYWtlciIsImEiOiJjbTQ3bnVleTEwN3d5MmxweHI2d21sc2lxIn0.ybOGD3OUFJrDOMMWszY8Rg';
+
+    const map = new mapboxgl.Map({
+      container: 'map', // Map container ID
+      style: 'mapbox://styles/mapbox/dark-v10', // Use Mapbox's dark style
+      center: [81.05907530791517, 26.888545268230786], // Center map to BBD University coordinates
+      zoom: 16 // Zoom level for the area
+    });
+
+    map.on('load', function() {
+      // Remove existing layers (e.g., olg-winners layer, Lucknow points)
+      if (map.getLayer('lucknow-points')) {
+        map.removeLayer('lucknow-points');
+      }
+      if (map.getSource('lucknow')) {
+        map.removeSource('lucknow');
+      }
+
+      // Define new GeoJSON data for the new points (BBD University, H-Block, and Stadium)
+      const coordinates = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05907530791517, 26.888545268230786] // BBD University
+            },
+            properties: {
+              name: 'BBD University'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [26.888803916165653, 81.05906971009962] // BBD University H-Block
+            },
+            properties: {
+              name: 'BBD University H-Block'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05872662077684, 26.88394252413874] // BBD Stadium
+            },
+            properties: {
+              name: 'BBD Stadium'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05879861272237, 26.885361339438756] // Correct order: [longitude, latitude]
+            },
+            properties: {
+              name: 'BBD Auditorium'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05800118795383, 26.887754807626173] // Correct order: [longitude, latitude]
+            },
+            properties: {
+              name: 'Canteen'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05766195622938, 26.887001959587472] // Correct order: [longitude, latitude]
+            },
+            properties: {
+              name: 'ECE'
+            }
+          },
+        ]
+      };
+
+      // Add a GeoJSON source for the new points
+      map.addSource('bbd-locations', {
+        type: 'geojson',
+        data: coordinates
+      });
+
+      // Add a layer to display the points (dots)
+      map.addLayer({
+        id: 'bbd-points',
+        type: 'circle',
+        source: 'bbd-locations',
+        paint: {
+          'circle-radius': 10, // Radius of the dots
+          'circle-color': '#FF6347', // Color of the dots (Tomato)
+          'circle-stroke-color': '#ffffff', // Stroke color (white)
+          'circle-stroke-width': 2 // Stroke width
+        }
+      });
+
+      // Add a popup when clicking on a dot (show name of the location)
+      map.on('click', 'bbd-points', function(e) {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const name = e.features[0].properties.name;
+
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(`<h3>${name}</h3>`)
+          .addTo(map);
+      });
+
+      // Change the cursor to a pointer when hovering over the dot
+      map.on('mouseenter', 'bbd-points', function() {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to default when not hovering over the dot
+      map.on('mouseleave', 'bbd-points', function() {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+  </script>
+
+</body>
+</html>

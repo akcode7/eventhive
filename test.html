@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapbox Live Geolocation Tracking</title>
+  <!-- Include Mapbox GL JS stylesheet -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
+  <!-- Include Mapbox GL JS script -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+  <style>
+    /* Ensure the map container has a defined size */
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <script>
+    //access token from https://codepen.io/adamxmartin/pen/ByBoBOe
+    mapboxgl.accessToken = 'pk.eyJ1IjoidGhlLW1hcC1tYWtlciIsImEiOiJjbTQ3bnVleTEwN3d5MmxweHI2d21sc2lxIn0.ybOGD3OUFJrDOMMWszY8Rg';
+
+    // Initialize the map with default coordinates (BBD University)
+    const map = new mapboxgl.Map({
+      container: 'map', // Map container ID
+      style: 'mapbox://styles/the-map-maker/cm47odyvf01d601rw17b3fp9c', // Map style URL
+      center: [81.05907530791517, 26.888545268230786], // Default center (BBD University)
+      zoom: 16 // Zoom level
+    });
+
+    // Initialize marker for the current location
+    let userMarker = new mapboxgl.Marker()
+      .setPopup(new mapboxgl.Popup().setHTML('<h3>Your Current Location</h3>'))
+      .addTo(map);
+
+    // Function to update the user's location on the map
+    function updateLocation(position) {
+      const userLatitude = position.coords.latitude;
+      const userLongitude = position.coords.longitude;
+
+      // Update the map's center to the new position
+      map.setCenter([userLongitude, userLatitude]);
+
+      // Update the marker position
+      userMarker.setLngLat([userLongitude, userLatitude]);
+    }
+
+    // Watch the user's position and update the map as the user moves
+    if (navigator.geolocation) {
+      const watchId = navigator.geolocation.watchPosition(updateLocation, function(error) {
+        console.error("Error getting geolocation:", error);
+      }, {
+        enableHighAccuracy: true, // Request high accuracy
+        maximumAge: 0,            // Do not use cached position
+        timeout: 5000             // Timeout after 5 seconds
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+
+    map.on('load', function() {
+      // Remove existing layers (e.g., olg-winners layer, Lucknow points)
+      if (map.getLayer('lucknow-points')) {
+        map.removeLayer('lucknow-points');
+      }
+      if (map.getSource('lucknow')) {
+        map.removeSource('lucknow');
+      }
+
+      // Define new GeoJSON data for the new points (BBD University, H-Block, Stadium, and Auditorium)
+      const coordinates = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05907530791517, 26.888545268230786] // BBD University
+            },
+            properties: {
+              name: 'BBD University'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05912358769409, 26.887344362441215] // BBD University H-Block
+            },
+            properties: {
+              name: 'BBD University H-Block'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05872662077684, 26.88394252413874] // BBD Stadium
+            },
+            properties: {
+              name: 'BBD Stadium'
+            }
+          },
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [81.05879861272237, 26.885361339438756] // BBD Auditorium
+            },
+            properties: {
+              name: 'BBD Auditorium'
+            }
+          }
+        ]
+      };
+
+      // Add a GeoJSON source for the new points
+      map.addSource('bbd-locations', {
+        type: 'geojson',
+        data: coordinates
+      });
+
+      // Add a layer to display the points (dots)
+      map.addLayer({
+        id: 'bbd-points',
+        type: 'circle',
+        source: 'bbd-locations',
+        paint: {
+          'circle-radius': 10, // Radius of the dots
+          'circle-color': '#FF6347', // Color of the dots (Tomato)
+          'circle-stroke-color': '#ffffff', // Stroke color (white)
+          'circle-stroke-width': 2 // Stroke width
+        }
+      });
+
+      // Add a popup when clicking on a dot (show name of the location)
+      map.on('click', 'bbd-points', function(e) {
+        const coordinates = e.features[0].geometry.coordinates.slice();
+        const name = e.features[0].properties.name;
+
+        new mapboxgl.Popup()
+          .setLngLat(coordinates)
+          .setHTML(`<h3>${name}</h3>`)
+          .addTo(map);
+      });
+
+      // Change the cursor to a pointer when hovering over the dot
+      map.on('mouseenter', 'bbd-points', function() {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to default when not hovering over the dot
+      map.on('mouseleave', 'bbd-points', function() {
+        map.getCanvas().style.cursor = '';
+      });
+    });
+  </script>
+
+</body>
+</html>

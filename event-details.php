@@ -1,3 +1,18 @@
+
+<?php
+session_start();
+
+if (isset($_SESSION['email'])) {
+    // Session already exists, user is identified
+    $email = $_SESSION['email'];
+   
+} else {
+    // No session exists, user needs to log in or register
+    header("location: ../authentication/login.php"); // Replace 'login.php' with the actual login page
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,17 +23,33 @@
     <title>EventHive</title>
 </head>
 <body>
+<?php include 'src/config/db_connect.php';
+
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    // Get the user ID from the session
+    $sessionUserName = $_SESSION['username'];
+ 
+    // Query to select user data based on user_id from the session
+    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
+    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
+
+    // Check if there are any rows returned from the query
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+      
+?>
     <div class="container p-5">
         <img
     alt=""
     src="https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
     class="h-64 w-full object-cover sm:h-80 lg:h-96 rounded-xl"
      />
-        <h1 class="bg-yellow-400 text-black py-3 text-3xl font-bold rounded-lg my-2 px-2">Webdev collab</h1>
+        <h1 class="bg-yellow-400 text-black py-3 text-3xl font-bold rounded-lg my-2 px-2"><?php echo $row['event_name']?></h1>
         <p class="mt-2 max-w-sm text-lg text-gray-700 font-semibold">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Magni reiciendis sequi ipsam incidunt.
+        <?php echo $row['event_discription']?>
           </p>
-          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Event Type</h1>
+          <h1 class="text-black text-2xl font-bold rounded-lg my-2"><?php echo $row['event_type']?></h1>
           <p class="mt-2 max-w-sm text-lg text-gray-700 font-semibold">
            Web Development project contribution
           </p>
@@ -40,10 +71,10 @@
          </div>
 
          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Event Date</h1>
-         <p class=" text-lg text-gray-700 font-semibold">6 December 2024</p>
-         <p class=" text-lg text-gray-700 font-semibold"> 2:30 pm</p>
+         <p class=" text-lg text-gray-700 font-semibold"><?php echo $row['event_date']?></p>
+         <p class=" text-lg text-gray-700 font-semibold"> <?php echo $row['event_start']?></p>
          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Event Location</h1>
-         <p class=" text-lg text-gray-700 font-semibold">Floor 3, Room 314</p>
+         <p class=" text-lg text-gray-700 font-semibold"><?php echo $row['location']?></p>
          
 
          <h1 class="text-black text-2xl font-bold rounded-lg my-2">Before You Join</h1>
@@ -51,5 +82,9 @@
 
          <button  class=" text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 my-4 ">Join Event</button>
     </div>
+
+    <?php
+  }}}
+  ?>
 </body>
 </html>

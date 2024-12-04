@@ -18,6 +18,7 @@
         }
 </style>
 <body>
+    <form action="create-events.php" method="GET">
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-8 p-5">
             <div class="h-48 rounded-lg my-2 overflow-hidden bg-[url('../images/university.png')] events-venu relative">
             <p class="font-semibold text-black text-center bg-white text-sm mx-3 py-2 rounded-lg">University Building</p>
@@ -36,5 +37,7 @@
                 <p  class="absolute bottom-0 right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1 align-bottom">Create Event</p>
             </div>
       </div>
+
+      </form>
 </body>
 </html>

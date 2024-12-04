@@ -1,3 +1,70 @@
+<?php
+session_start();
+
+if (isset($_SESSION['email'])) {
+    // Session already exists, user is identified
+    $email = $_SESSION['email'];
+   
+} else {
+    // No session exists, user needs to log in or register
+    header("location: ../authentication/login.php"); 
+    exit();
+}
+?>
+
+<?php
+include 'src/config/db_connect.php';
+
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+// Process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get input data
+    $eventvenue = isset($_GET['eventvenue']) ? $_GET['eventvenue'] : '';
+    $username = $_SESSION['username'];
+    $eventid = "EHive".rand(1111111,9999999);
+    $eventname = $_POST['eventname'];
+    $event_type = $_POST['eventtype'];
+    $event_date = $_POST['eventdate'];
+    $eventlocation = $_POST['eventlocation']
+    $eventstart = $_POST['eventstart'];
+    $eventend = $_POST['eventend'];
+    $eventapprover = $_POST['eventapprover'];
+    $joiningreq = $_POST['joiningreq'];
+    $eventdiscription = $_POST['eventdiscription'];
+    $eventstatus = "Unapproved";
+     // Get the current Indian time
+     //$formateventdate = $event_date->format('Y-m-d H:i:s');
+
+
+    // Use prepared statement to prevent SQL injection
+    $sql = "INSERT INTO `event_detail` (`event_id`,`user_name`,`event_name`, `event_type`, `event_date`, `event_start`, `event_end`, `event_approver`, `req_for_joining`, `event_description`, `event_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+    $stmt = $conn->prepare($sql);
+
+    // Bind parameters
+    $stmt->bind_param("sssssssssss",  $eventid, $username, $eventname, $event_type, $event_date, $eventstart, $eventend, $eventapprover, $joiningreq, $eventdiscription,  $eventstatus);
+
+    // Execute the statement
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+     
+      header("location: ../../index.php");
+       
+    } else {
+        echo "insert error";
+    }
+
+    $stmt->close();
+
+}
+
+// Connection closed
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,23 +79,23 @@
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Event</h2>
-                <form action="#">
+                <form method="POST">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                         <div class="sm:col-span-2">
-                            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Event Name</label>
-                            <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Type event name" required="">
+                            <label for="eventname" class="block mb-2 text-sm font-medium text-gray-900 ">Event Name</label>
+                            <input type="text" name="eventname" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  placeholder="Type event name" required="">
                         </div>
                         <div class="w-full">
-                            <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 ">Event Type</label>
-                            <input type="text" name="brand" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="E.g Collab" required="">
+                            <label for="eventtype" class="block mb-2 text-sm font-medium text-gray-900 ">Event Type</label>
+                            <input type="text" name="eventtype" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="E.g Collab" required="">
                         </div>
                         <div class="w-full">
-                            <label for="date" class="block mb-2 text-sm font-medium text-gray-900 ">Event Date</label>
-                            <input type="date" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="select Date" required="">
+                            <label for="eventdate" class="block mb-2 text-sm font-medium text-gray-900 ">Event Date</label>
+                            <input type="date" name="eventdate" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  placeholder="select Date" required="">
                         </div>
                         <div>
-                            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Event Start</label>
-                            <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
+                            <label for="eventstart" class="block mb-2 text-sm font-medium text-gray-900 ">Event Start</label>
+                            <select id="eventstart" name="eventstart" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
                                 <option selected="">Select Time</option>
                                 <option value="9:00 Am">9:00 Am</option>
                                 <option value="9:30 Am">9:30 Am</option>
@@ -45,16 +112,12 @@
                                 <option value="3:00 pm">3:00 pm</option>
                                 <option value="3:30 pm">3:30 pm</option>
                                 <option value="4:00 pm">4:00 pm</option>
-                                <option value="4:30 pm">4:30 pm</option>
-                               
-                               
-
-                                
+                                <option value="4:30 pm">4:30 pm</option> 
                             </select>
                         </div>
                         <div>
-                            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Event End</label>
-                            <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
+                            <label for="eventend" class="block mb-2 text-sm font-medium text-gray-900 ">Event End</label>
+                            <select id="eventend" name="eventend" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
                                 <option selected="">Select Time</option>
                                 <option value="9:30 Am">9:30 Am</option>
                                 <option value="10:00 Am">10:00 Am</option>
@@ -71,30 +134,24 @@
                                 <option value="3:30 pm">3:30 pm</option>
                                 <option value="4:00 pm">4:00 pm</option>
                                 <option value="4:30 pm">4:30 pm</option>
-                                <option value="5:00 pm">5:00 pm</option>
-                               
-
-                                
+                                <option value="5:00 pm">5:00 pm</option>   
                             </select>
                         </div>
                         <p class="w-full">Request to be approved by 1 host to make your listing visible to public</p>
                         <div>
                             <label for="item-weight" class="block mb-2 text-sm font-medium text-gray-900 ">Event Approver</label>
-                            <input type="number" name="item-weight" id="item-weight" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Eg. ankitsharma" required="">
+                            <input type="text" name="eventapprover" id="eventapprover" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="write username of approver" required="">
                         </div> 
                        
                         
                         <div class="sm:col-span-2">
-                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Requirements for joining</label>
-                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a product description here...">You should have react knowledge and a laptop </textarea>
+                            <label for="joiningreq" class="block mb-2 text-sm font-medium text-gray-900 ">Requirements for joining</label>
+                            <textarea id="joiningreq" name="joiningreq" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write requirements here..."></textarea>
                         </div>
 
                         <div class="sm:col-span-2">
-                            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Event Description</label>
-                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a product description here...">DevFest is a series of global developer conferences
-                                 hosted by Google Developer Groups (GDGs) around 
-                                the world. These events bring together developers to learn about the latest technologies from Google and other industry leaders, 
-                                network with peers, and collaborate on projects.</textarea>
+                            <label for="eventdiscription" class="block mb-2 text-sm font-medium text-gray-900 ">Event Description</label>
+                            <textarea id="eventdiscription" name="eventdiscription" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a Event description here..."></textarea>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">

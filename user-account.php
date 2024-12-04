@@ -1,3 +1,18 @@
+
+<?php
+session_start();
+
+if (isset($_SESSION['email'])) {
+    // Session already exists, user is identified
+    $email = $_SESSION['email'];
+   
+} else {
+    // No session exists, user needs to log in or register
+    header("location: ../authentication/login.php"); // Replace 'login.php' with the actual login page
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,35 +31,51 @@
                 <div class="flex justify-between">
                     <img class="rounded w-36 h-36" src="https://flowbite.com/application-ui/demo/images/users/jese-leos-2x.png" alt="Extra large avatar">
                     <div>
-                        <button class=" text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
+                       <a href="edit-profile.php"> <button class=" text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
                             Edit Profile
-                        </button>
+                        </button></a>
                     </div>
                     
                 </div>
-               
-                <h1 class="font-bold text-3xl pt-3">Ankit Sharma</h1>
-                <span class="font-bold text-lg">@</span><span class="font-medium text-lg">ankitsharma</span>
-                <p class="text-lg font-semibold pt-1"><i class="fa fa-map-marker pr-2" style="font-size:20px;color:black"></i>Lucknow</p>
+           
+ <?php include 'src/config/db_connect.php';
+
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    // Get the user ID from the session
+    $sessionUserName = $_SESSION['username'];
+ 
+    // Query to select user data based on user_id from the session
+    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
+    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
+
+    // Check if there are any rows returned from the query
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+      
+?>
+                <h1 class="font-bold text-3xl pt-3"><?php echo $row['name']?></h1>
+                <span class="font-bold text-lg">@</span><span class="font-medium text-lg"><?php echo $row['username']?></span>
+                <p class="text-lg font-semibold pt-1"><?php echo $row['email']?></p>
+                <p class="text-lg font-semibold pt-1"><i class="fa fa-map-marker pr-2" style="font-size:20px;color:black"></i><?php echo $row['location']?></p>
                 <h1 class="font-bold text-xl pt-1">Course</h1>
-                <p class="text-lg font-semibold pt-1">Bachelor of Technology </p>
+                <p class="text-lg font-semibold pt-1"><?php echo $row['course']?> </p>
                 <h1 class="font-bold text-xl pt-1">Branch</h1>
-                <p class="text-lg font-semibold pt-1">Computer Science Engineering</p>
+                <p class="text-lg font-semibold pt-1"><?php echo $row['branch']?></p>
                 <h1 class="font-bold text-xl pt-1">Year</h1>
-                <p class="text-lg font-semibold pt-1">3rd</p>
+                <p class="text-lg font-semibold pt-1"><?php echo $row['year']?> Year</p>
             </div>
 
             <div class="rounded-lg bg-gray-50 p-4 mt-4">
                 <h1 class="font-bold text-3xl pb-5">Skills</h1>
                 <div class="flex flex-wrap">
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg mb-2">HTML</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">CSS</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">JavaScript</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">Figma</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">HTML</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">CSS</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">JavaScript</span>
-                    <span class="bg-green-500 text-lg text-green-800  font-medium me-2 px-4 py-2 rounded-lg  mb-2">Figma</span>
+                    <?php 
+                    $skills = explode(", ", $row['skills']);
+                    foreach ($skills as $skill) {
+                  echo '<span class="bg-green-500 text-lg text-green-800 font-medium me-2 px-4 py-2 rounded-lg mb-2">' . htmlspecialchars($skill) . '</span>';
+                 } ?>
+                
+                   
                 </div>
 
             </div>
@@ -56,15 +87,13 @@
                 <h1 class="font-bold text-3xl pt-3">General Information</h1>
                
                 <h1 class="font-bold text-2xl pt-1">About Me</h1>
-                <p class="text-base font-normal pt-1">Tincidunt quam neque in cursus viverra orci, dapibus nec tristique. Nullam ut sit dolor consectetur urna, dui cras nec sed. Cursus risus congue arcu aenean posuere aliquam.
-
-                    Et vivamus lorem pulvinar nascetur non. Pulvinar a sed platea rhoncus ac mauris amet. Urna, sem pretium sit pretium urna, senectus vitae. Scelerisque fermentum, cursus felis dui suspendisse velit pharetra. Augue et duis cursus maecenas eget quam lectus. Accumsan vitae nascetur pharetra rhoncus praesent dictum risus suspendisse.</p>
+                <p class="text-base font-normal pt-1"><?php echo $row['about_me']?></p>
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 ">
                    <div>
                     <h1 class="font-bold text-lg pt-1">College/University</h1>
-                    <p class="text-base font-normal pt-1">Babu Banarasi Das University</p>
+                    <p class="text-base font-normal pt-1"><?php echo $row['institution']?></p>
                     <h1 class="font-bold text-lg pt-1">Join Date</h1>
-                    <p class="text-base font-normal pt-1">6 December 2024</p>
+                    <p class="text-base font-normal pt-1"><?php echo $row['joining_date']?></p>
                     <h1 class="font-bold text-lg pt-1 pb-2">Events Organised</h1>
                     <span class="text-base bg-yellow-400 py-1 px-4 font-bold text-center rounded-lg">5</span>
                     <button class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
@@ -73,18 +102,22 @@
                    </div>
                    <div>
                     <h1 class="font-bold text-lg pt-1">Expertise</h1>
-                    <p class="text-base font-normal pt-1">Full Stack Development</p>
+                    <p class="text-base font-normal pt-1"><?php echo $row['expertise']?></p>
                     <h1 class="font-bold text-lg pt-1 pb-2">Social Media</h1>
                     <div class="flex flex-wrap">
-                        <button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">GitHub</button>
-                        <button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">LinkedIn</button>
+                        <a href="https://<?php echo $row['github']?>"><button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">GitHub</button></a>
+                        <a href="https://<?php echo $row['linkedin']?>"><button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2">LinkedIn</button></a>
                     </div>
                    </div>
                 </div>
             </div>
         </div>
-        
+    <?php
+  }}}
+  ?>
       </div>
     </div>
+
+  
 </body>
 </html>

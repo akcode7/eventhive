@@ -27,28 +27,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $year = $_POST['year'];
     $about = $_POST['about'];
     $expertise = $_POST['expertise'];
-    $joining_date = $_POST['joining_date'];
+   
     $github = $_POST['github'];
     $linkedin = $_POST['linkedin'];
     $institution = $_POST['institution'];
-    $sessionusername = $_SESSION['username'];
     $join_date = $_SESSION['join_date'];
+
     if (isset($_POST['skills'])) {
         $skill_op = $_POST['skills'];   
         foreach ($skill_op as $option) {
             $skills[] = $option; 
         }
-        $user_skills = implode("", $skills);
+        $user_skills = implode(", ", $skills);
     } else {
         $user_skills = "No skills selected";
     }
-
+   
     // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO `user_detail` (`user_name`, `location`, `course`, `branch`,`year`,`about_me`,`expertise`,`joining_date`,`github`,`linkedin`,`institution`, `username`, `joining_date`,`skills`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+    $sql = "UPDATE `user_detail` SET `location` = ?,  `course` = ?,  `branch` = ?,  `year` = ?,   `about_me` = ?,  `expertise` = ?,  `joining_date` = ?,  `github` = ?,  `linkedin` = ?,  `institution` = ?,   `skills` = ?  WHERE email = '$email'";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param("ssssisssssssss", $sessionusername, $location, $course, $branch, $year, $about, $expertise, $joining_date, $github, $linkedin, $institution, $sessionUsername, $join_date, $user_skills);
+    $stmt->bind_param("sssisssssss", $location, $course, $branch, $year, $about, $expertise, $join_date, $github, $linkedin, $institution, $user_skills);
 
     // Execute the statement
     $stmt->execute();
@@ -113,22 +113,40 @@ $conn->close();
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Profile</h2>
+
+                           
+ <?php include 'src/config/db_connect.php';
+
+// Check if the user is logged in
+if (isset($_SESSION['username'])) {
+    // Get the user ID from the session
+    $sessionUserName = $_SESSION['username'];
+ 
+    // Query to select user data based on user_id from the session
+    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
+    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
+
+    // Check if there are any rows returned from the query
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+      
+?>
                 <form method="POST">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                        
                         <div class="w-full">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Your Name</label>
-                            <input type="text" name="name" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Your Name" required="">
+                            <input type="text" name="name" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['name']?> " placeholder="Your Name" required="">
                         </div>
                         <div class="w-full">
                             <label for="location" class="block mb-2 text-sm font-medium text-gray-900 ">Location</label>
-                            <input type="text" name="location" id="location" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="eg. Lucknow" required="">
+                            <input type="text" name="location" id="location" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['location']?> " placeholder="eg. Lucknow" required="">
                         </div>
                         
                         <div>
                             <label for="course" class="block mb-2 text-sm font-medium text-gray-900 ">Course</label>
                             <select id="course" name="course" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Course</option>
+                                <option selected="" value="<?php echo $row['course']?> "><?php echo $row['course']?> </option>
                                 <option value="Bachelor of Technology">Bachelor of Technology</option>
                                 <option value="Bachelor of Computer Application ">Bachelor of Computer Application</option>
                                 <option value="Bachelor of Business Administration">Bachelor of Business Administration </option>
@@ -138,7 +156,7 @@ $conn->close();
                         <div>
                             <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Branch</label>
                             <select id="category" name="branch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Branch</option>
+                                <option selected="" value="<?php echo $row['branch']?> "><?php echo $row['branch']?> </option>
                                 <option value="Computer Science Engineering">Computer Science Engineering</option>
                                 <option value="Cloud Computing and Machine Learning">Cloud Computing and Machine Learning</option>
                                 <option value="Artificial Inteligence">Artificial Inteligence </option>
@@ -152,7 +170,7 @@ $conn->close();
                         <div>
                             <label for="year" class="block mb-2 text-sm font-medium text-gray-900 ">Year</label>
                             <select id="year" name="year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Year</option>
+                                <option selected="" value="<?php echo $row['year']?> "><?php echo $row['year']?></option>
                                 <option value="1">1st</option>
                                 <option value="2">2nd</option>
                                 <option value="3">3rd</option>
@@ -163,7 +181,7 @@ $conn->close();
                         <div>
                             <label for="institute" class="block mb-2 text-sm font-medium text-gray-900 ">Institute</label>
                             <select id="institute" name="institution" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Institute</option>
+                                <option selected="" value="<?php echo $row['institution']?> "><?php echo $row['institution']?> </option>
                                 <option value="Babu Banarasi Das University" name="institution">Babu Banarasi Das University</option>
                                 <option value="2nd" >BBD Institute of Management</option>
                                 <option value="3rd" >BBDNIIT</option>
@@ -173,22 +191,22 @@ $conn->close();
                         </div>
                         <div class="sm:col-span-2">
                             <label for="expertise" class="block mb-2 text-sm font-medium text-gray-900 ">Expertise</label>
-                            <input type="text" name="expertise" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Full-Stack Developer" required="">
+                            <input type="text" name="expertise" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['expertise']?> " placeholder="Full-Stack Developer" required="">
                         </div>
                         <div class="sm:col-span-2">
                             <label for="github" class="block mb-2 text-sm font-medium text-gray-900 ">Github</label>
-                            <input type="text" name="github" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Full-Stack Developer" >
+                            <input type="text" name="github" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['github']?> " placeholder="eg. github.com/username" >
                         </div>
                         <div class="sm:col-span-2">
                             <label for="linkedin" class="block mb-2 text-sm font-medium text-gray-900 ">LinkedIn</label>
-                            <input type="text" name="linkedin" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Full-Stack Developer" >
+                            <input type="text" name="linkedin" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['linkedin']?> " placeholder="eg. linkedin.com/username" >
                         </div>
                         <h3 class="mb-1 font-semibold text-gray-900">Skills</h3>
                        <div class="sm:col-span-2 overflow-scroll h-48">
                        <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex mt-2 ">
                             <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
                                 <div class="flex items-center ps-3">
-                                    <input id="vue-checkbox-list" name="skills[]" value="Vue JS" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
+                                    <input id="vue-checkbox-list" name="skills[]" value="Vue JS" type="checkbox" value="Vue Js" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
                                     <label for="vue-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Vue JS</label>
                                 </div>
                             </li>
@@ -297,7 +315,7 @@ $conn->close();
                          
                         <div class="sm:col-span-2">
                             <label for="about" class="block mb-2 text-sm font-medium text-gray-900 ">About</label>
-                            <textarea id="about" rows="3" name="about" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write something about yourself..."></textarea>
+                            <textarea id="about" rows="3" name="about" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write something about yourself..."><?php echo $row['about_me']?></textarea>
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload Profile Picture</label>
@@ -313,9 +331,19 @@ $conn->close();
                       
                     </div>
                 </form>
+
+                <?php
+  }}}
+  ?>
             </div>
           </section>
 
     </div>
+
+    <script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
 </body>
 </html>

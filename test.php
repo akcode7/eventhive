@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,58 +9,51 @@
     <title>EventHive</title>
 </head>
 <body>
+<style>
+    /**
+ * @license
+ * Copyright 2024 Google LLC. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-<?php
-
-if (isset($_POST['skills'])) {
-    $skill_op = $_POST['skills']; 
-    
-   
-    foreach ($skill_op as $option) {
-        $skills[] = $option; 
-    }
-    
-    
-    $user_skills = implode("", $skills);
-} else {
-   
-    $user_skills = "No skills selected";
+/* Optional: Makes the sample page fill the window. */
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
-echo $user_skills;
-?>
-
-<form method="post">
-                  <ul class="items-center w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg sm:flex mt-2 ">
-                            <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
-                                <div class="flex items-center ps-3">
-                                    <input id="vue-checkbox-list" name="skills[]" value="Vue JS" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
-                                    <label for="vue-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Vue JS</label>
-                                </div>
-                            </li>
-                            <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
-                                <div class="flex items-center ps-3">
-                                    <input id="react-checkbox-list" name="skills[]" type="checkbox" value="React" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 ">
-                                    <label for="react-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">React</label>
-                                </div>
-                            </li>
-                            <li class="w-full border-b border-gray-200 sm:border-b-0 sm:border-r ">
-                                <div class="flex items-center ps-3">
-                                    <input id="angular-checkbox-list" name="skills[]" type="checkbox" value="Angular" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 ">
-                                    <label for="angular-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900">Angular</label>
-                                </div>
-                            </li>
-                            <li class="w-full ">
-                                <div class="flex items-center ps-3">
-                                    <input id="laravel-checkbox-list" name="skills[]" type="checkbox" value="Laravel" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 ">
-                                    <label for="laravel-checkbox-list" class="w-full py-3 ms-2 text-sm font-medium text-gray-900 ">Laravel</label>
-                                </div>
-                            </li>
-                    </ul>
-
-                    <button type="submit">this </button>
-
-</form>
-   
+/* Shift the flag icon to the right so that the bottom of the flagpole
+ * aligns with the anchor point. */
+.flag-icon {
+  position: relative;
+  left: 10px;
+}
+</style>
+    <gmp-map center="26.888641086875605, 81.05903983007525" zoom="16" map-id="DEMO_MAP_ID">
+      <gmp-advanced-marker position="26.888776237171417, 81.0589923272311" title="Bondi Beach">
+        <img class="flag-icon"
+             src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+      </gmp-advanced-marker>
+      <gmp-advanced-marker position="26.887931588206563, 81.05808036414905" title="Coogee Beach">
+        <img class="flag-icon"
+             src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+      </gmp-advanced-marker>
+      <gmp-advanced-marker position="26.887291942306096, 81.05910929839457" title="Cronulla Beach">
+        <img class="flag-icon"
+             src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+      </gmp-advanced-marker>
+      <gmp-advanced-marker position="26.886935559931715, 81.05772425928674" title="Manly Beach">
+        <img class="flag-icon"
+             src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+      </gmp-advanced-marker>
+      <gmp-advanced-marker position="26.885339164707034, 81.05883286456537" title="Maroubra Beach">
+        <img class="flag-icon"
+             src="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"/>
+      </gmp-advanced-marker>
+    </gmp-map>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&loading=async&libraries=marker&v=beta&solution_channel=GMP_CCS_complexmarkers_v3"
+      defer
+    ></script>
 </body>
 </html>

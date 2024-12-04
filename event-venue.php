@@ -17,6 +17,9 @@
     }
 </style>
 <body>
+    <!-- Header starts -->
+    <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
     <div class="container mx-auto max-w-6xl">
 
         <div class="grid grid-cols-6 gap-4 p-5">

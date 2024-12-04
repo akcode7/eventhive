@@ -24,6 +24,9 @@ if (isset($_SESSION['email'])) {
     <title>EventHive</title>
 </head>
 <body>
+<!-- Header starts -->
+<?php include 'src/component/header.php';?>
+<!-- Header ends -->
 <div class="container mx-auto px-5 py-10">
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
         <div>

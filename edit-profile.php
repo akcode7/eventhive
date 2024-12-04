@@ -137,10 +137,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/output.css">
+    <!-- SCRIPT -->
     <script src="index.js"></script>
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <title>EventHive</title>
+    <style>
+        *{
+        margin:0;
+        padding:0;
+        font-family: "ZCOOL XiaoWei", sans-serif;
+        }
+    </style>
 </head>
 <body>
+    <!-- Header starts -->
+    <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
     <div class="container mx-auto">
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
@@ -373,6 +388,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
+        // Menu
+    const hamburger = document.getElementById('hamburger');
+    const menu = document.getElementById('menu');
+    const close = document.getElementById('close');
+    const overlay = document.getElementById('overlay');
+
+    hamburger.addEventListener('click', () => {
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+    });
+
+    close.addEventListener('click', () => {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+
+    overlay.addEventListener('click', () => {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+    // subMenus
+    document.querySelectorAll('.dropdown-toggle').forEach(container => {
+        const dropdownArrow = container.querySelector('.dropdown-arrow');
+        const childMenu = container.nextElementSibling; 
+
+        // Toggle dropdown on SVG
+        dropdownArrow.addEventListener('click', (event) => {
+            event.stopPropagation(); 
+            childMenu.classList.toggle('hidden');
+            dropdownArrow.classList.toggle('rotate-180');
+        });
+    });
+
     if ( window.history.replaceState ) {
         window.history.replaceState( null, null, window.location.href );
     }

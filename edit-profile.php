@@ -1,22 +1,9 @@
 <?php
-session_start();
-
-if (isset($_SESSION['email'])) {
-    // Session already exists, user is identified
-    $email = $_SESSION['email'];
-   
-} else {
-    // No session exists, user needs to log in or register
-    header("location: src/authentication/login.php"); // Replace 'login.php' with the actual login page
-    exit();
-}
-?>
-
-<?php
-include 'src/config/db_connect.php';
-
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+
+include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -27,12 +14,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $year = $_POST['year'];
     $about = $_POST['about'];
     $expertise = $_POST['expertise'];
-   
     $github = $_POST['github'];
     $linkedin = $_POST['linkedin'];
     $institution = $_POST['institution'];
     $join_date = $_SESSION['join_date'];
 
+    // Process skills
     if (isset($_POST['skills'])) {
         $skill_op = $_POST['skills'];   
         foreach ($skill_op as $option) {
@@ -42,62 +29,107 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $user_skills = "No skills selected";
     }
-   
-    // Use prepared statement to prevent SQL injection
-    $sql = "UPDATE `user_detail` SET `location` = ?,  `course` = ?,  `branch` = ?,  `year` = ?,   `about_me` = ?,  `expertise` = ?,  `joining_date` = ?,  `github` = ?,  `linkedin` = ?,  `institution` = ?,   `skills` = ?  WHERE email = '$email'";
+
+    // Handle image upload
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        // Get the uploaded image details
+        $imageTmpName = $_FILES['profile_picture']['tmp_name'];
+        $imageName = $_FILES['profile_picture']['name'];
+        $imageSize = $_FILES['profile_picture']['size'];
+        $imageError = $_FILES['profile_picture']['error'];
+
+        // Generate a unique name for the uploaded image
+        $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+        $newImageName = uniqid('', true) . '.' . $imageExt;
+
+        // Set the target directory
+        $targetDir = 'src/upload/';
+        $targetFile = $targetDir . $newImageName;
+
+        // Allowed image extensions
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+        // Validate the file type
+        if (in_array($imageExt, $allowedExtensions)) {
+            // Check file size (5MB max)
+            if ($imageSize < 5000000) {
+                // Move the uploaded file to the target directory
+                if (move_uploaded_file($imageTmpName, $targetFile)) {
+                    $imagePath = $targetFile;  // Save the image path
+                } else {
+                    echo "Error uploading image.";
+                }
+            } else {
+                echo "File is too large. Max size is 5MB.";
+            }
+        } else {
+            echo "Invalid file type. Only JPG, JPEG, PNG, GIF allowed.";
+        }
+    } else {
+        // If no image was uploaded, set the image path to the previous value or NULL
+        $imagePath = null;
+    }
+
+    // SQL query for updating user details
+    $sql = "UPDATE `user_detail` SET 
+                `location` = ?, 
+                `course` = ?, 
+                `branch` = ?, 
+                `year` = ?, 
+                `about_me` = ?, 
+                `expertise` = ?, 
+                `joining_date` = ?, 
+                `github` = ?, 
+                `linkedin` = ?, 
+                `institution` = ?, 
+                `skills` = ?, 
+                `img` = ? 
+            WHERE email = '$email'";
+
+    // Prepare statement
     $stmt = $conn->prepare($sql);
 
-    // Bind parameters
-    $stmt->bind_param("sssisssssss", $location, $course, $branch, $year, $about, $expertise, $join_date, $github, $linkedin, $institution, $user_skills);
+    // Bind parameters (make sure types match the data you are binding)
+    $stmt->bind_param("sssissssssss", $location, $course, $branch, $year, $about, $expertise, $join_date, $github, $linkedin, $institution, $user_skills, $imagePath);
 
     // Execute the statement
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-     
-        echo ' <div id="model-popup" class="absolute top-28">
-
-        <div  tabindex="-1"  class=" flex item-center items-baseline overflow-y-auto overflow-x-hidden fixed  z-50 justify-center md:items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative p-4 w-full max-w-md max-h-full top-0 mx-auto">
-                <div class="relative bg-white rounded-lg shadow py-8 w-full mx-auto ">
-                    <p onclick="cancelbookbtn()" class="absolute top-3 end-2.5 text-gray-800 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " ">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-        </p>
-                    <div class="p-4 md:p-5 text-center">
-                        
-                       
-                    <svg  class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0,0,256,256"
-                    style="fill:#000000;">
-                    <g fill="#43ff28" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M25,2c-12.683,0 -23,10.317 -23,23c0,12.683 10.317,23 23,23c12.683,0 23,-10.317 23,-23c0,-4.56 -1.33972,-8.81067 -3.63672,-12.38867l-1.36914,1.61719c1.895,3.154 3.00586,6.83148 3.00586,10.77148c0,11.579 -9.421,21 -21,21c-11.579,0 -21,-9.421 -21,-21c0,-11.579 9.421,-21 21,-21c5.443,0 10.39391,2.09977 14.12891,5.50977l1.30859,-1.54492c-4.085,-3.705 -9.5025,-5.96484 -15.4375,-5.96484zM43.23633,7.75391l-19.32227,22.80078l-8.13281,-7.58594l-1.36328,1.46289l9.66602,9.01563l20.67969,-24.40039z"></path></g></g>
-                    </svg>
-                        <h3 class="mb-5 text-2xl font-medium text-green-400 ">Successfully Updated</h3>
-                       
+        echo '
+        <div id="model-popup" class="absolute top-28">
+            <div tabindex="-1" class="flex item-center items-baseline overflow-y-auto overflow-x-hidden fixed z-50 justify-center md:items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full top-0 mx-auto">
+                    <div class="relative bg-white rounded-lg shadow py-8 w-full mx-auto ">
+                        <p onclick="cancelbookbtn()" class="absolute top-3 end-2.5 text-gray-800 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center ">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </p>
+                        <div class="p-4 md:p-5 text-center">
+                            <svg class="mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100" viewBox="0,0,256,256" style="fill:#000000;">
+                                <g fill="#43ff28" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M25,2c-12.683,0 -23,10.317 -23,23c0,12.683 10.317,23 23,23c12.683,0 23,-10.317 23,-23c0,-4.56 -1.33972,-8.81067 -3.63672,-12.38867l-1.36914,1.61719c1.895,3.154 3.00586,6.83148 3.00586,10.77148c0,11.579 -9.421,21 -21,21c-11.579,0 -21,-9.421 -21,-21c0,-11.579 9.421,-21 21,-21c5.443,0 10.39391,2.09977 14.12891,5.50977l1.30859,-1.54492c-4.085,-3.705 -9.5025,-5.96484 -15.4375,-5.96484zM43.23633,7.75391l-19.32227,22.80078l-8.13281,-7.58594l-1.36328,1.46289l9.66602,9.01563l20.67969,-24.40039z"></path></g></g>
+                            </svg>
+                            <h3 class="mb-5 text-2xl font-medium text-green-400 ">Successfully Updated</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>';
-        echo '  <script>
+        echo '  
+        <script>
         function cancelbookbtn() {
            let element = document.getElementById("model-popup");
            element.classList.toggle("hidden");
         }
         </script>';
-       
     } else {
-        echo "insert error";
+        echo "Update error.";
     }
-
-    $stmt->close();
-
 }
-
-// Connection closed
-$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -109,29 +141,29 @@ $conn->close();
     <title>EventHive</title>
 </head>
 <body>
-    <div class="container">
+    <div class="container mx-auto">
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Profile</h2>
 
                            
- <?php include 'src/config/db_connect.php';
+                <?php include 'src/config/db_connect.php';
 
-// Check if the user is logged in
-if (isset($_SESSION['username'])) {
-    // Get the user ID from the session
-    $sessionUserName = $_SESSION['username'];
- 
-    // Query to select user data based on user_id from the session
-    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
-    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
+                // Check if the user is logged in
+                if (isset($_SESSION['username'])) {
+                    // Get the user ID from the session
+                    $sessionUserName = $_SESSION['username'];
+                
+                    // Query to select user data based on user_id from the session
+                    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
+                    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
 
-    // Check if there are any rows returned from the query
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-      
-?>
-                <form method="POST">
+                    // Check if there are any rows returned from the query
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                    
+                ?>
+                <form method="POST"  enctype="multipart/form-data">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                        
                         <div class="w-full">
@@ -319,7 +351,7 @@ if (isset($_SESSION['username'])) {
                         </div>
                         <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload Profile Picture</label>
-                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none " id="file_input" type="file">
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="file_input" type="file" name="profile_picture" value="<?php echo $row['img']?>" accept="image/*">
                         </div>
 
                         

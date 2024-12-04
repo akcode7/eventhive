@@ -24,36 +24,37 @@ if (isset($_SESSION['email'])) {
     <title>EventHive</title>
 </head>
 <body>
-<div class="container p-5">
+<div class="container mx-auto px-5 py-10">
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-8">
         <div>
             <div class="rounded-lg bg-gray-50 p-4">
-                <div class="flex justify-between">
-                    <img class="rounded w-36 h-36" src="https://flowbite.com/application-ui/demo/images/users/jese-leos-2x.png" alt="Extra large avatar">
-                    <div>
-                       <a href="edit-profile.php"> <button class=" text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
-                            Edit Profile
-                        </button></a>
-                    </div>
+                <?php include 'src/config/db_connect.php';
+
+                    // Check if the user is logged in
+                    if (isset($_SESSION['username'])) {
+                        // Get the user ID from the session
+                        $sessionUserName = $_SESSION['username'];
                     
+                        // Query to select user data based on user_id from the session
+                        $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
+                        $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
+
+                        // Check if there are any rows returned from the query
+                        if ($result && mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) {
+                        
+                ?>
+                <div class="flex justify-between">
+                    <img class="rounded w-40 h-32" src="<?php echo $row['img']?>" alt="Extra large avatar">
+                <div>
+                <a href="edit-profile.php"> <button class=" text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
+                        Edit Profile
+                    </button></a>
                 </div>
+                
+            </div>
            
- <?php include 'src/config/db_connect.php';
-
-// Check if the user is logged in
-if (isset($_SESSION['username'])) {
-    // Get the user ID from the session
-    $sessionUserName = $_SESSION['username'];
  
-    // Query to select user data based on user_id from the session
-    $query = "SELECT * FROM `user_detail` WHERE username = '$sessionUserName'";
-    $result = mysqli_query($conn, $query); // Assuming you have a database connection stored in $conn
-
-    // Check if there are any rows returned from the query
-    if ($result && mysqli_num_rows($result) > 0) {
-        while ($row = mysqli_fetch_assoc($result)) {
-      
-?>
                 <h1 class="font-bold text-3xl pt-3"><?php echo $row['name']?></h1>
                 <span class="font-bold text-lg">@</span><span class="font-medium text-lg"><?php echo $row['username']?></span>
                 <p class="text-lg font-semibold pt-1"><?php echo $row['email']?></p>
@@ -95,10 +96,9 @@ if (isset($_SESSION['username'])) {
                     <h1 class="font-bold text-lg pt-1">Join Date</h1>
                     <p class="text-base font-normal pt-1"><?php echo $row['joining_date']?></p>
                     <h1 class="font-bold text-lg pt-1 pb-2">Events Organised</h1>
-                    <span class="text-base bg-yellow-400 py-1 px-4 font-bold text-center rounded-lg">5</span>
-                    <button class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
+                    <a href="event-venue.php" class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
                         Create Event
-                    </button>
+                    </a>
                    </div>
                    <div>
                     <h1 class="font-bold text-lg pt-1">Expertise</h1>

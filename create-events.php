@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 
 session_start();
@@ -17,19 +18,32 @@ if (isset($_SESSION['email'])) {
 <?php
 include 'src/config/db_connect.php';
 
+=======
+>>>>>>> 8ada36f90593f3cc8cf716f8df87087f5c3c91d9
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
+
+include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
+
+$slug = isset($_GET['location']) ? trim($_GET['location'], '/') : '';
+
+if (empty($slug)) {
+    // header("Location: ../");
+    echo "error: Event id is missing";
+    exit();
+}
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get input data
-    $eventvenue = isset($_GET['eventvenue']) ? $_GET['eventvenue'] : '';
+    $eventlocation = $_POST['eventlocation'];
     $username = $_SESSION['username'];
     $eventid = "EHive".rand(1111111,9999999);
     $eventname = $_POST['eventname'];
     $event_type = $_POST['eventtype'];
     $event_date = $_POST['eventdate'];
-    $eventlocation = $_POST['eventlocation']
+    $eventvenue = $_POST['eventvenue'];
     $eventstart = $_POST['eventstart'];
     $eventend = $_POST['eventend'];
     $eventapprover = $_POST['eventapprover'];
@@ -41,18 +55,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO `event_detail` (`event_id`,`user_name`,`event_name`, `event_type`, `event_date`, `event_start`, `event_end`, `event_approver`, `req_for_joining`, `event_description`, `event_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+    $sql = "INSERT INTO `event_detail` (`event_id`,`user_name`,`event_name`, `event_type`, `event_location`, `event_venue`, `event_date`, `event_start`, `event_end`, `event_approver`, `req_for_joining`, `event_description`, `event_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param("sssssssssss",  $eventid, $username, $eventname, $event_type, $event_date, $eventstart, $eventend, $eventapprover, $joiningreq, $eventdiscription,  $eventstatus);
+    $stmt->bind_param("sssssssssssss",  $eventid, $username, $eventname, $event_type, $eventlocation, $eventvenue, $event_date, $eventstart, $eventend, $eventapprover, $joiningreq, $eventdiscription,  $eventstatus);
 
     // Execute the statement
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
      
-      header("location: ../../index.php");
+    //   header("location: ../../index.php");
+    echo "success";
        
     } else {
         echo "insert error";
@@ -73,14 +88,25 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/output.css">
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <script src="index.js"></script>
     <title>EventHive</title>
+    <style>
+         *{
+        margin:0;
+        padding:0;
+        font-family: "ZCOOL XiaoWei", sans-serif;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container mx-auto max-w-6xl">
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
-                <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Event</h2>
+                <h2 class="mb-4 text-xl font-bold text-gray-900 ">Create Event</h2>
                 <form method="POST">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                         <div class="sm:col-span-2">
@@ -139,10 +165,20 @@ $conn->close();
                                 <option value="5:00 pm">5:00 pm</option>   
                             </select>
                         </div>
-                        <p class="w-full">Request to be approved by 1 host to make your listing visible to public</p>
-                        <div>
+                        <div class="">
+                            <label for="eventlocation" class="block mb-2 text-sm font-medium text-gray-900 ">Event Location</label>
+                            <input type="text" name="eventlocation" id="eventlocation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  value="<?php echo $slug?>" disabled required>
+                        </div>
+                        <div class="">
+                            <label for="eventvenue" class="block mb-2 text-sm font-medium text-gray-900 ">Event Venue</label>
+                            <input type="text" name="eventvenue" id="eventvenue" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  placeholder="Type event venue" required="">
+                        </div>
+                        <div class="sm:col-span-2">
                             <label for="item-weight" class="block mb-2 text-sm font-medium text-gray-900 ">Event Approver</label>
-                            <input type="text" name="eventapprover" id="eventapprover" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="write username of approver" required="">
+                            <input type="text" name="eventapprover" id="eventapprover" oninput="load_data(this.value)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" value="" placeholder="Write username of approver" required="">
+                            <div id="suggestions-container" class="mt-2"></div> <!-- Container for suggestions -->
+                            <p class="text-sm font-semibold text-gray-600">*Request to be approved by 1 host to make your listing visible to public</p>
+
                         </div> 
                        
                         
@@ -165,7 +201,24 @@ $conn->close();
                 </form>
             </div>
           </section>
-
     </div>
+    <script>
+      function load_data(search = '') {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "src/search/search.php?search=" + search, true);
+        xhr.onload = function() {
+            document.getElementById('suggestions-container').innerHTML = xhr.responseText;
+        }
+        xhr.send();
+    }
+
+    //  handle click
+    function selectSuggestion(username) {
+        document.getElementById('eventapprover').value = username;
+        document.getElementById('suggestions-container').innerHTML = '';
+    }
+
+
+    </script>
 </body>
 </html>

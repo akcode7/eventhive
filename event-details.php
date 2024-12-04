@@ -37,7 +37,7 @@ if (empty($slug)) {
 <body>
 
 <?php
-    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_id` = '$slug' AND `event_status` = 'approved'");
+    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_id` = '$slug'");
     while($row = mysqli_fetch_assoc($sql)){
 ?>
 

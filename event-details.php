@@ -10,8 +10,6 @@ if (empty($slug)) {
     echo "error: Event id is missing";
     exit();
 }
-
-
 ?>
 
 <!DOCTYPE html>

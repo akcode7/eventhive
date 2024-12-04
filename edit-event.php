@@ -1,3 +1,15 @@
+<?php
+include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
+
+$slug = isset($_GET['id']) ? trim($_GET['id'], '/') : '';
+
+if (empty($slug)) {
+    // header("Location: ../");
+    echo "error: Event id is missing";
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,28 +20,35 @@
     <title>EventHive</title>
 </head>
 <body>
-    <div class="container">
+    <!-- Header starts -->
+    <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
+    <div class="container mx-auto">
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Event</h2>
+                <?php
+                    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE `event_id` = '$slug'");
+                    while($row = mysqli_fetch_assoc($sql)){
+                ?>
                 <form action="#">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                         <div class="sm:col-span-2">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Event Name</label>
-                            <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Eg. WebDev Collaboration" required="">
+                            <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['event_name']?>" required="">
                         </div>
                         <div class="w-full">
                             <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 ">Event Type</label>
-                            <input type="text" name="brand" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Eg. Collab webdev" required="">
+                            <input type="text" name="brand" id="brand" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['event_type']?>" required="">
                         </div>
                         <div class="w-full">
                             <label for="price" class="block mb-2 text-sm font-medium text-gray-900 ">Event Date</label>
-                            <input type="number" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="2999" placeholder="$299" required="">
+                            <input type="date" name="price" id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['event_date']?>" required="">
                         </div>
                         <div>
                             <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Event Start</label>
                             <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Time</option>
+                                <option selected="" value="<?php echo $row['event_start']?>"><?php echo $row['event_start']?></option>
                                 <option value="9:00 Am">9:00 Am</option>
                                 <option value="9:30 Am">9:30 Am</option>
                                 <option value="10:00 Am">10:00 Am</option>
@@ -55,7 +74,7 @@
                         <div>
                             <label for="category" class="block mb-2 text-sm font-medium text-gray-900 ">Event End</label>
                             <select id="category" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ">
-                                <option selected="">Select Time</option>
+                                <option selected="" value="<?php echo $row['event_end']?>"><?php echo $row['event_end']?></option>
                                 <option value="9:30 Am">9:30 Am</option>
                                 <option value="10:00 Am">10:00 Am</option>
                                 <option value="10:30 Am">10:30 Am</option>
@@ -79,17 +98,17 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 ">Event Location</label>
-                            <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="" placeholder="Type Floor/Room number" required="">
+                            <input type="text" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " value="<?php echo $row['event_location']?>" required="">
                         </div>
                          
                         <div class="sm:col-span-2">
                             <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Requirements for joining</label>
-                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a product description here..."></textarea>
+                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 "><?php echo $row['req_for_joining']?></textarea>
                         </div>
 
                         <div class="sm:col-span-2">
                             <label for="description" class="block mb-2 text-sm font-medium text-gray-900 ">Event Description</label>
-                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a product description here..."></textarea>
+                            <textarea id="description" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a product description here..."><?php echo $row['event_description']?></textarea>
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
@@ -102,6 +121,7 @@
                         </button>
                     </div>
                 </form>
+                <?php }?>
             </div>
           </section>
 

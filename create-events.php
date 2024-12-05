@@ -8,17 +8,15 @@ include 'src/config/db_connect.php';
 $slug = isset($_GET['location']) ? trim($_GET['location'], '/') : '';
 
 if (empty($slug)) {
-    // header("Location: ../");
     echo "error: Event id is missing";
     exit();
 }
 
-// Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get input data
     $eventlocation = $_POST['eventlocation'];
     $username = $_SESSION['username'];
-    $eventid = "EHive".rand(1111111,9999999);
+    $eventid = "EHive" . rand(1111111, 9999999);
     $eventname = $_POST['eventname'];
     $event_type = $_POST['eventtype'];
     $event_date = $_POST['eventdate'];
@@ -29,34 +27,67 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $joiningreq = $_POST['joiningreq'];
     $eventdiscription = $_POST['eventdiscription'];
     $eventstatus = "Unapproved";
-     // Get the current Indian time
-     //$formateventdate = $event_date->format('Y-m-d H:i:s');
+    
+    // Handle image upload
+    if (isset($_FILES['event_img']) && $_FILES['event_img']['error'] === UPLOAD_ERR_OK) {
+        // Get the uploaded image details
+        $imageTmpName = $_FILES['event_img']['tmp_name'];
+        $imageName = $_FILES['event_img']['name'];
+        $imageSize = $_FILES['event_img']['size'];
+        $imageError = $_FILES['event_img']['error'];
+        
+        // Generate a unique name for the uploaded image
+        $imageExt = strtolower(pathinfo($imageName, PATHINFO_EXTENSION));
+        $newImageName = uniqid('', true) . '.' . $imageExt;
+        
+        // Set the target directory
+        $targetDir = 'src/upload/';
+        $targetFile = $targetDir . $newImageName;
 
+        // Allowed image extensions
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
 
-    // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO `event_detail` (`event_id`,`user_name`,`event_name`, `event_type`, `event_location`, `event_venue`, `event_date`, `event_start`, `event_end`, `event_approver`, `req_for_joining`, `event_description`, `event_status`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);";
+        // Validate the file type
+        if (in_array($imageExt, $allowedExtensions)) {
+            
+            if ($imageSize < 5000000) {
+                if (move_uploaded_file($imageTmpName, $targetFile)) {
+                    $eventimg = $targetFile; 
+                } else {
+                    echo "Error uploading image.";
+                    $eventimg = NULL; 
+                }
+            } else {
+                echo "File is too large. Max size is 5MB.";
+                $eventimg = NULL; 
+            }
+        } else {
+            echo "Invalid file type. Only JPG, JPEG, PNG, GIF allowed.";
+            $eventimg = NULL; 
+        }
+    } else {
+        $eventimg = NULL;
+    }
+
+    $sql = "INSERT INTO `event_detail` 
+            (`event_id`, `user_name`, `event_name`, `event_type`, `event_location`, `event_venue`, `event_date`, `event_start`, `event_end`, `event_approver`, `req_for_joining`, `event_description`, `event_status`, `event_img`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param("sssssssssssss",  $eventid, $username, $eventname, $event_type, $eventlocation, $eventvenue, $event_date, $eventstart, $eventend, $eventapprover, $joiningreq, $eventdiscription,  $eventstatus);
+    $stmt->bind_param("ssssssssssssss", $eventid, $username, $eventname, $event_type, $eventlocation, $eventvenue, $event_date, $eventstart, $eventend, $eventapprover, $joiningreq, $eventdiscription, $eventstatus, $eventimg);
 
-    // Execute the statement
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-     
-    header("location: your-events.php");
-       
+        header("location: your-events.php");
     } else {
-        echo "insert error";
+        echo "Insert error.";
     }
-
-    $stmt->close();
 
 }
 
-// Connection closed
-$conn->close();
+
 ?>
 
 
@@ -87,9 +118,9 @@ $conn->close();
     <!-- Header ends -->
     <div class="container mx-auto max-w-6xl">
         <section class="bg-white">
-            <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
+            <div class="max-w-2xl px-4 py-8 mx-auto lg:py-6">
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Create Event</h2>
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
                         <div class="sm:col-span-2">
                             <label for="eventname" class="block mb-2 text-sm font-medium text-gray-900 ">Event Name</label>
@@ -173,6 +204,12 @@ $conn->close();
                             <label for="eventdiscription" class="block mb-2 text-sm font-medium text-gray-900 ">Event Description</label>
                             <textarea id="eventdiscription" name="eventdiscription" rows="3" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write a Event description here..."></textarea>
                         </div>
+                        <div>
+                            <!-- File input to allow user to upload a new image -->
+                            <input class="block w-full text-sm text-gray-900 cursor-pointer focus:outline-none" 
+                                id="file_input" type="file" name="event_img" accept="image/*">
+                        </div>
+
                     </div>
                     <div class="flex items-center space-x-4">
                         <button type="submit" class="text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center  ">

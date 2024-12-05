@@ -45,7 +45,7 @@ if (empty($slug)) {
     <div class="container mx-auto py-5 xl:py-10">
         <div class="flex space-x-3 items-center justify-center">
             <div class="w-12 xl:w-24">
-                <img class="rounded-md" src="https://unfold2024.devfolio.co/_next/image?url=https%3A%2F%2Fassets.devfolio.co%2Fhackathons%2Fbeea3a652dd04c86b1890bd76bca5451%2Fassets%2Ffavicon%2F93.png&w=1440&q=75" alt="">
+                <img class="rounded-md" src="<?php echo $row['event_img']?>" alt="">
             </div>
             <div class="text-2xl xl:text-4xl font-semibold text-black"><?php echo $row['event_name']?></div>
         </div>
@@ -55,7 +55,7 @@ if (empty($slug)) {
             <div class="grid grid-cols-3 gap-4">
                 <div class="col-span-3 xl:col-span-2 p-5 border rounded-lg">
                     <div>
-                        <img class="rounded-lg hidden" src="https://unfold2024.devfolio.co/_next/image?url=https%3A%2F%2Fassets.devfolio.co%2Fhackathons%2Fbeea3a652dd04c86b1890bd76bca5451%2Fassets%2Fcover%2F856.jpeg&w=1440&q=100" alt="">
+                        <img class="rounded-lg" src="<?php echo $row['event_img']?>" alt="">
                     </div>
                     <div class="p-5 border rounded-lg bg-white mt-5">
                         <p class="text-base font-medium text-gray-800"><?php echo $row['event_description']?></p>

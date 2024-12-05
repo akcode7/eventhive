@@ -140,7 +140,7 @@ $geojson = json_encode([
           <div class="flex justify-between">
             <div class="px-2 overflow-wrap">
               <h3 class="text-lg font-bold text-gray-900 sm:text-xl break-words"><?php echo $row['event_name']?></h3>
-              <p class="mt-1 text-xs font-semibold text-gray-800">@<?php echo $row['user_name']?></p>
+              <a href="user-page.php?user=<?php echo $row['user_name'];?>" class="mt-1 text-xs font-semibold text-gray-800 hover:text-indigo-800 hover:font-bold">@<?php echo $row['user_name']?></a>
             </div>
             <div class="px-2">
               <img alt="" src="<?php echo $row['img']?>" class="size-16 rounded-lg object-cover shadow-sm"/>

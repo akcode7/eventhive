@@ -33,7 +33,7 @@
     <div class="container mx-auto px-2 md:pl-2 md:pr-6 my-2">
         <nav class="flex items-center justify-between">
             <a href="/" class="flex items-center">
-                <img src="src/images/logo.png" alt="Logo" class="w-12 w- md:w-28 logo">
+                <img src="src/images/logo.png" alt="Logo" class="w-12 w- md:w-24 logo">
             </a>
             <div class="flex space-x-4 md:space-x-10">
                 <ul class="xl:flex space-x-5 mt-1.5 items-center hidden">

@@ -105,12 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         </script>';
     }
-
-
-
 }
-
-// Connection closed
 
 ?>
 <!DOCTYPE html>
@@ -118,9 +113,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./src/css/output.css">
     <script src="index.js"></script>
     <title>EventHive</title>
+    <style>
+         *{
+        margin:0;
+        padding:0;
+        font-family: "ZCOOL XiaoWei", sans-serif;
+        }
+    </style>
 </head>
 <body>
     <!-- Header starts -->

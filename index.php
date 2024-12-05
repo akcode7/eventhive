@@ -126,7 +126,11 @@ $geojson = json_encode([
     <!-- Cards Section -->
     <div class="col-span-2 xl:col-span-1 xl:px-10 xl:py-12 overflow-y-scroll cards-section pt-3 pb-8 px-4">
       <?php
-          $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE `event_status` = 'approved' ORDER BY `sno` DESC");
+          $sql = mysqli_query($conn, " SELECT event_detail.*, user_detail.img 
+          FROM event_detail
+          INNER JOIN user_detail ON event_detail.user_name = user_detail.username 
+          WHERE event_detail.event_status = 'approved' 
+          ORDER BY event_detail.sno DESC");
           while($row = mysqli_fetch_assoc($sql)){
       ?>
       <!-- Card -->
@@ -139,7 +143,7 @@ $geojson = json_encode([
               <p class="mt-1 text-xs font-semibold text-gray-800">@<?php echo $row['user_name']?></p>
             </div>
             <div class="px-2">
-              <img alt="" src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80" class="size-16 rounded-lg object-cover shadow-sm"/>
+              <img alt="" src="<?php echo $row['img']?>" class="size-16 rounded-lg object-cover shadow-sm"/>
             </div>
           </div>
           <div class="mt-4 px-2">
@@ -156,8 +160,12 @@ $geojson = json_encode([
           </div>
           <dl class="mt-6 flex gap-4 sm:gap-6 px-2">
             <div class="flex flex-col-reverse">
-              <dd class="text-xs text-gray-500"><?php echo $row['event_date'];?></dd>
-              <dt class="text-sm font-medium text-gray-600">Event Date</dt>
+              <dd class="text-xs font-semibold text-gray-900"><?php echo $row['event_date'];?></dd>
+              <dt class="text-sm font-semibold text-indigo-700">Event Date</dt>
+            </div>
+            <div class="flex flex-col-reverse">
+              <dd class="text-xs font-semibold text-gray-900"><?php echo $row['event_location'];?></dd>
+              <dt class="text-sm font-semibold text-indigo-700">Event Location</dt>
             </div>
             <div class="flex items-center justify-end">
               <a href="event-details.php?id=<?php echo $row['event_id']?>">

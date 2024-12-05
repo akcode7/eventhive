@@ -5,6 +5,12 @@ ini_set('display_errors', 'On');
 include 'src/config/session-config.php';
 include 'src/config/db_connect.php';
 
+$featureImg='';
+$sql = mysqli_query($conn, "SELECT `img` FROM `user_detail` WHERE username = '" . mysqli_real_escape_string($conn, $_SESSION['username']) . "'");
+while($row = mysqli_fetch_assoc($sql)){
+    $featureImg = $row['img'];
+}
+
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get input data
@@ -29,6 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $user_skills = "No skills selected";
     }
+
+    // Get the existing image path from the database
+    $existingImage = isset($featureImg) && !empty($featureImg) ? $featureImg : NULL;
 
     // Handle image upload
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
@@ -55,19 +64,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($imageSize < 5000000) {
                 // Move the uploaded file to the target directory
                 if (move_uploaded_file($imageTmpName, $targetFile)) {
-                    $imagePath = $targetFile;  // Save the image path
+                    $imagePath = $targetFile;  // Save the new image path
                 } else {
                     echo "Error uploading image.";
+                    $imagePath = $existingImage; // Retain the existing image if upload fails
                 }
             } else {
                 echo "File is too large. Max size is 5MB.";
+                $imagePath = $existingImage; // Retain the existing image if size is too large
             }
         } else {
             echo "Invalid file type. Only JPG, JPEG, PNG, GIF allowed.";
+            $imagePath = $existingImage; // Retain the existing image if the file type is invalid
         }
     } else {
-        // If no image was uploaded, set the image path to the previous value or NULL
-        $imagePath = null;
+        // If no new image was uploaded, use the existing image
+        $imagePath = $existingImage;
     }
 
     // SQL query for updating user details
@@ -90,7 +102,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     // Bind parameters (make sure types match the data you are binding)
-    $stmt->bind_param("sssissssssss", $location, $course, $branch, $year, $about, $expertise, $join_date, $github, $linkedin, $institution, $user_skills, $imagePath);
+    $stmt->bind_param("sssissssssss", 
+        $location, 
+        $course, 
+        $branch, 
+        $year, 
+        $about, 
+        $expertise, 
+        $join_date, 
+        $github, 
+        $linkedin, 
+        $institution, 
+        $user_skills, 
+        $imagePath
+    );
 
     // Execute the statement
     $stmt->execute();
@@ -123,11 +148,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
            let element = document.getElementById("model-popup");
            element.classList.toggle("hidden");
         }
+        setTimeout(function() {
+            window.location.href = "user-account.php";
+        }, 2000);  // 2000 milliseconds = 2 seconds
+
         </script>';
     } else {
         echo "Update error.";
     }
 }
+
+
 ?>
 
 
@@ -162,7 +193,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h2 class="mb-4 text-xl font-bold text-gray-900 ">Edit Profile</h2>
 
                            
-                <?php include 'src/config/db_connect.php';
+                <?php 
+                // include 'src/config/db_connect.php';
 
                 // Check if the user is logged in
                 if (isset($_SESSION['username'])) {
@@ -364,10 +396,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <label for="about" class="block mb-2 text-sm font-medium text-gray-900 ">About</label>
                             <textarea id="about" rows="3" name="about" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 " placeholder="Write something about yourself..."><?php echo $row['about_me']?></textarea>
                         </div>
-                        <div>
+                        <!-- <div>
                             <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload Profile Picture</label>
-                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="file_input" type="file" name="profile_picture" value="<?php echo $row['img']?>" accept="image/*">
-                        </div>
+                            <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" id="file_input" type="file" name="profile_picture" value="" accept="image/*">
+                        </div> -->
+
+                        <div>
+    <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload Profile Picture</label>
+    
+    <!-- Display the existing image if available -->
+    <?php 
+    $featureImg=$row['img'];
+    if(!empty($row['img'])): ?>
+        <img src="<?php echo $row['img']; ?>" alt="Profile Image" class="w-32 h-32 mb-3 rounded-full object-cover" />
+    <?php endif; ?>
+
+    <!-- File input to allow user to upload a new image -->
+    <input class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" 
+           id="file_input" type="file" name="profile_picture" accept="image/*">
+</div>
+
+
 
                         
                     </div>

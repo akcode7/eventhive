@@ -19,9 +19,20 @@ if (isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./src/css/output.css">
+    <!-- FONT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <script src="index.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>EventHive</title>
+    <style>
+         *{
+        margin:0;
+        padding:0;
+        font-family: "ZCOOL XiaoWei", sans-serif;
+        }
+    </style>
 </head>
 <body>
 <!-- Header starts -->
@@ -48,7 +59,7 @@ if (isset($_SESSION['email'])) {
                         
                 ?>
                 <div class="flex justify-between">
-                    <img class="rounded w-40 h-32" src="<?php echo $row['img']?>" alt="Extra large avatar">
+                    <img class="rounded-lg w-40 h-32 shadow-md" src="<?php echo $row['img']?>" alt="Extra large avatar">
                 <div>
                 <a href="edit-profile.php"> <button class=" text-white bg-purple-600 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
                         Edit Profile

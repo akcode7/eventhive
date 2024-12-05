@@ -2060,6 +2060,14 @@ video {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
 }
 
+.bg-\[url\(\'\.\.\/src\/locationimg\/university\.png\'\)\] {
+  background-image: url('../src/locationimg/university.png');
+}
+
+.bg-\[url\(\'\.\.\/\.\.\/src\/locationimg\/university\.png\'\)\] {
+  background-image: url('../../src/locationimg/university.png');
+}
+
 .from-green-300 {
   --tw-gradient-from: #86efac var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(134 239 172 / 0) var(--tw-gradient-to-position);

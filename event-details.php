@@ -38,7 +38,12 @@ if (empty($slug)) {
     <!-- Header ends -->
 
 <?php
-    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_id` = '$slug'");
+    $sql = mysqli_query($conn, "
+    SELECT event_detail.*, places.place_img 
+    FROM event_detail
+    INNER JOIN places ON event_detail.event_location = places.name
+    WHERE event_detail.event_id = '$slug'");
+
     while($row = mysqli_fetch_assoc($sql)){
 ?>
 
@@ -84,8 +89,8 @@ if (empty($slug)) {
                 </div>
                 <div class="hidden xl:block col-span-1 py-5">
                     <div class="bg-white p-6 rounded-lg shadow-xl">
-                        <div class="bg-gray-500 h-60 mb-5 rounded-lg">
-                            
+                        <div class="bg-gray-500 h-60 overflow-hidden mb-5 rounded-lg">
+                            <img src="<?php echo $row['place_img']?>" alt="" class="bg-cover">
                         </div>
                         <div class="border-l-[5px] border-indigo-700">
                             <div class="pl-2">

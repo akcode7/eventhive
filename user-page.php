@@ -1,7 +1,6 @@
-
 <?php
-include 'src/config/db_connect.php';
 include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
 
 $slug = isset($_GET['user']) ? trim($_GET['user'], '/') : '';
 
@@ -95,9 +94,8 @@ if (empty($slug)) {
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 ">
                    <div>
                     <h1 class="font-bold text-lg pt-1">College/University</h1>
-                    <p class="text-base font-normal pt-1 pb-2"><?php echo $row['institution']?></p>
-                    <h1 class="font-bold text-lg pt-1">Join Date</h1>
-                    <p class="text-base font-normal pt-1 pb-2"><?php echo $row['joining_date']?></p>
+                    <p class="text-base font-normal pt-1 pb-4"><?php echo $row['institution']?></p>
+                    
 
                    </div>
                    <div>

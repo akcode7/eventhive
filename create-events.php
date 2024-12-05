@@ -1,9 +1,9 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
 
 include 'src/config/session-config.php';
 include 'src/config/db_connect.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
 $slug = isset($_GET['location']) ? trim($_GET['location'], '/') : '';
 

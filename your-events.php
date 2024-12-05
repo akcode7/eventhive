@@ -1,17 +1,17 @@
 <?php
-include 'src/config/db_connect.php';
-
 session_start();
 
 if (isset($_SESSION['username'])) {
-    // Session already exists, user is identified
+    
     $username = $_SESSION['username'];
    
 } else {
-    // No session exists, user needs to log in or register
+    
     header("location: src/authentication/login.php"); 
     exit();
 }
+include 'src/config/db_connect.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +60,7 @@ if (isset($_SESSION['username'])) {
                             </p>
                         </div>
                         <div class="inline-flex items-center text-base font-semibold text-gray-900">
+                            <a href="event-participant.php?id=<?php echo urlencode($row['event_id']); ?>" class="text-lg font-bold text-yellow-500 px-2 cursor-pointer">Participant</a>
                             <a href="edit-event.php?id=<?php echo urlencode($row['event_id']); ?>" class="text-lg font-bold text-teal-500 px-2 cursor-pointer">Edit</a>
                             <a href="event-details.php?id=<?php echo urlencode($row['event_id']); ?>" class="text-lg font-bold text-blue-500 px-2 cursor-pointer">View</a>
                         </div>

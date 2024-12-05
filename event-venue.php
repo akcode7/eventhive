@@ -38,7 +38,7 @@
                 while($row = mysqli_fetch_assoc($sql)){
             ?>
             
-            <div class="col-span-2 h-48 rounded-lg my-2 overflow-hidden events-venu relative" style="background-image: url('<?php echo $row['place_img']?>'); background-size: cover; background-position: center;">
+            <div class="col-span-3 xl:col-span-2 h-48 rounded-lg my-2 overflow-hidden events-venu relative" style="background-image: url('<?php echo $row['place_img']?>'); background-size: cover; background-position: center;">
                 <p class="font-semibold text-black text-center bg-white text-sm mx-3 py-2 rounded-lg"><?php echo $row['name']?></p>
                 <a href="create-events.php?location=<?php echo $row['name']?>" class="absolute bottom-0 right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1 align-bottom">Create Event</a>
             </div>

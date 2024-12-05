@@ -1,17 +1,17 @@
 <?php
-include 'src/config/db_connect.php';
-
 session_start();
 
 if (isset($_SESSION['username'])) {
-    // Session already exists, user is identified
+    
     $username = $_SESSION['username'];
    
 } else {
-    // No session exists, user needs to log in or register
+    
     header("location: src/authentication/login.php"); 
     exit();
 }
+include 'src/config/db_connect.php';
+
 ?>
 
 

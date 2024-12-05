@@ -5,7 +5,7 @@ include 'src/config/db_connect.php';
 $slug = isset($_GET['id']) ? trim($_GET['id'], '/') : '';
 
 if (empty($slug)) {
-    // header("Location: ../");
+    
     echo "error: Event id is missing";
     exit();
 }

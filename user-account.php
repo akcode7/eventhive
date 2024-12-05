@@ -1,7 +1,6 @@
-
 <?php
-include 'src/config/db_connect.php';
 include 'src/config/session-config.php';
+include 'src/config/db_connect.php';
 ?>
 
 <!DOCTYPE html>
@@ -47,7 +46,8 @@ include 'src/config/session-config.php';
                         
                 ?>
                 <div class="flex justify-between">
-                    <img class="rounded-lg w-40 h-32 shadow-md" src="<?php echo $row['img']?>" alt="Extra large avatar">
+                    
+                    <div class="bg-cover bg-center rounded-xl w-40 h-32 shadow-lg" style="background-image: url('<?php echo $row['img']?>');"></div>
                 <div>
                 <a href="edit-profile.php"> <button class=" text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center  ">
                         Edit Profile
@@ -94,9 +94,7 @@ include 'src/config/session-config.php';
                 <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8 ">
                    <div>
                     <h1 class="font-bold text-lg pt-1">College/University</h1>
-                    <p class="text-base font-normal pt-1 pb-2"><?php echo $row['institution']?></p>
-                    <h1 class="font-bold text-lg pt-1">Join Date</h1>
-                    <p class="text-base font-normal pt-1 pb-4"><?php echo $row['joining_date']?></p>
+                    <p class="text-base font-normal pt-1 pb-3"><?php echo $row['institution']?></p>
                     
                     <a href="event-venue.php" class="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-3 text-center  ">
                         Create Event

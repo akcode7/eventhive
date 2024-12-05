@@ -2,27 +2,14 @@
 <?php 
 
 $server = "localhost";
-$username = "root";
+$username1 = "root";
 $password = "";
 $database = "eventhive";
 
-$conn = mysqli_connect($server, $username, $password, $database);
+$conn = mysqli_connect($server, $username1, $password, $database);
 if(!$conn){
     echo "error";
 }
 
-//  ?>
-
-<?php 
- 
-// $server = "localhost";
-// $username = "root";
-// $password = "";
-// $database = "bookingsite";
-
-// $conn = mysqli_connect($server, $username, $password, $database);
-// if(!$conn){
-//     echo "error";
-// }
-
 ?>
+

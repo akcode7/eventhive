@@ -1,4 +1,3 @@
-
 <?php
 include 'src/config/session-config.php';
 include 'src/config/db_connect.php';
@@ -74,12 +73,12 @@ if ($result->num_rows > 0) {
     while($row = mysqli_fetch_assoc($sql)){
 ?>
 
-    <div class="container mx-auto py-5 xl:py-10">
+    <div class="container mx-auto py-5 xl:py-10 px-2">
         <div class="flex space-x-3 items-center justify-center">
-            <div class="w-12 xl:w-24">
+            <div class="w-24">
                 <img class="rounded-md" src="<?php echo $row['event_img']?>" alt="">
             </div>
-            <div class="text-2xl xl:text-4xl font-semibold text-black"><?php echo $row['event_name']?></div>
+            <div class="text-xl xl:text-4xl font-semibold text-black"><?php echo $row['event_name']?></div>
         </div>
     </div>
     <section class="bg-gray-100">

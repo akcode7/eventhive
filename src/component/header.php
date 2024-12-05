@@ -66,9 +66,12 @@
         <nav class="p-4 mt-14 md:mt-20">
             <div class="flex flex-col space-y-6 p-5 text-base">
                 <ul class="space-y-5">
-                   <a href="index.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li></a>
-                   <a href="user-account.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li></a>
-                    <a href="event-venue.php" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
+                   <a href="index.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer mb-2">HOME</li></a>
+                   <a href="your-events.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer mb-2">YOUR EVENTS</li></a>
+                   <a href="joined-events.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer mb-2">JOINED EVENTS</li></a>
+                   <a href="event-requests.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer mb-2">EVENT REQUESTS</li></a>
+                   <a href="user-account.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer mb-4">ACCOUNT</li></a>
+                    <a href="event-venue.php" class="text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded mb-2" data-key="nav-contact">CREATE EVENT</a>
                 </ul>
             </div>
         </nav>

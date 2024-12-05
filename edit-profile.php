@@ -1,9 +1,8 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
-
 include 'src/config/session-config.php';
 include 'src/config/db_connect.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
 
 $featureImg='';
 $sql = mysqli_query($conn, "SELECT `img` FROM `user_detail` WHERE username = '" . mysqli_real_escape_string($conn, $_SESSION['username']) . "'");
@@ -23,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $github = $_POST['github'];
     $linkedin = $_POST['linkedin'];
     $institution = $_POST['institution'];
-    $join_date = $_SESSION['join_date'];
 
     // Process skills
     if (isset($_POST['skills'])) {
@@ -90,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 `year` = ?, 
                 `about_me` = ?, 
                 `expertise` = ?, 
-                `joining_date` = ?, 
                 `github` = ?, 
                 `linkedin` = ?, 
                 `institution` = ?, 
@@ -102,14 +99,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($sql);
 
     // Bind parameters (make sure types match the data you are binding)
-    $stmt->bind_param("sssissssssss", 
+    $stmt->bind_param("sssisssssss", 
         $location, 
         $course, 
         $branch, 
         $year, 
         $about, 
-        $expertise, 
-        $join_date, 
+        $expertise,  
         $github, 
         $linkedin, 
         $institution, 

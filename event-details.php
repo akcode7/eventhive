@@ -10,6 +10,33 @@ if (empty($slug)) {
     echo "error: Event id is missing";
     exit();
 }
+
+$userName=$_SESSION['username'];
+$eventID =$slug;
+
+
+
+// Check if the user has already joined the event
+$sql = "SELECT * FROM joined_events WHERE user_name = ? AND event_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $userName, $eventID);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $joined = true;  // User already joined
+} else {
+    $joined = false;  // User has not joined yet
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        // Insert data to mark the user as joined
+        $status = 1;  // 1 means joined
+        $insert_sql = "INSERT INTO joined_events (user_name, event_id, join_status) VALUES (?, ?, ?)";
+        $insert_stmt = $conn->prepare($insert_sql);
+        $insert_stmt->bind_param("ssi", $userName, $eventID, $status);
+        $insert_stmt->execute();
+        $joined = true;  // After insertion, user is marked as joined
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -102,6 +129,17 @@ if (empty($slug)) {
                                 <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_end']?></p>
                             </div>
                         </div>
+                        <div class="rounded-lg mt-5 text-center cursor-pointer" id="joinButton">
+    <?php if ($joined): ?>
+        <!-- If user has joined, show 'Joined' and disable the button -->
+        <button class="text-lg font-semibold text-white text-center !bg-indigo-500 w-full h-full py-4 cursor-pointer rounded-lg transition-all duration-300" id="joinButtonText" disabled>Joined</button>
+    <?php else: ?>
+        <!-- If user has not joined, show 'Join Now' and enable the button -->
+        <form method="POST">
+            <button type="submit" class="text-lg font-semibold text-white text-center w-full h-full py-4 bg-indigo-700 hover:bg-yellow-600 rounded-lg  transition-all duration-300" id="joinButtonText">Join Now</button>
+        </form>
+    <?php endif; ?>
+</div>
                     </div>
                 </div>
             </div>

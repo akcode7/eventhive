@@ -30,14 +30,17 @@
 
 <!-- Header starts -->
 <header class="py-1 shadow-md mb-6">
-    <div class="container mx-auto px-2 md:pl-2 md:pr-6 my-2">
+    <div class="container mx-auto px-2 md:pl-2 md:pr-6 my-1">
         <nav class="flex items-center justify-between">
             <a href="/" class="flex items-center">
-                <img src="src/images/logo.png" alt="Logo" class="w-12 w- md:w-24 logo">
+                <img src="src/images/logo.png" alt="Logo" class="w-12 md:w-20 logo">
             </a>
             <div class="flex space-x-4 md:space-x-10">
                 <ul class="xl:flex space-x-5 mt-1.5 items-center hidden">
                     <a href="index.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li></a>
+                    <a href="your-events.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">YOUR EVENTS</li></a>
+                    <a href="joined-events.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">JOINED EVENTS</li></a>
+                    <a href="event-requests.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">EVENT REQUESTS</li></a>
                     <a href="user-account.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li>
                     <a href="event-venue.php" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
                 </ul>

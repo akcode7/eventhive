@@ -96,9 +96,9 @@ include 'src/config/session-config.php';
                     <h1 class="font-bold text-lg pt-1">College/University</h1>
                     <p class="text-base font-normal pt-1 pb-2"><?php echo $row['institution']?></p>
                     <h1 class="font-bold text-lg pt-1">Join Date</h1>
-                    <p class="text-base font-normal pt-1 pb-2"><?php echo $row['joining_date']?></p>
-                    <h1 class="font-bold text-lg pt-1 pb-3">Events Organised</h1>
-                    <a href="event-venue.php" class="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2 text-center  ">
+                    <p class="text-base font-normal pt-1 pb-4"><?php echo $row['joining_date']?></p>
+                    
+                    <a href="event-venue.php" class="text-white bg-indigo-600 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-3 text-center  ">
                         Create Event
                     </a>
                    </div>

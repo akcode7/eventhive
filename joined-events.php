@@ -78,8 +78,6 @@ if (isset($_GET['event_id'])) {
 
 }
 
-// Connection closed
-
 ?>
 
 <!DOCTYPE html>
@@ -108,67 +106,42 @@ if (isset($_GET['event_id'])) {
   <?php include 'src/component/header.php';?>
     <!-- Header ends -->
     <div class="container mx-auto p-5">
-        <h1 class="py-3 text-bold text-xl">Event Approval</h1>
+        <h1 class="py-3 text-bold text-2xl text-center">Joind Events</h1>
+        <div class="flex justify-center items-center mx-auto pt-8">
+            <ul class="max-w-5xl divide-y divide-gray-200 shadow-lg border p-5 w-full">
+                <?php
+                    $sql = mysqli_query($conn, "
+                        SELECT event_detail.*
+                        FROM event_detail
+                        INNER JOIN joined_events ON event_detail.event_id = joined_events.event_id
+                        WHERE joined_events.user_name = '$username'
+                    ");
 
-        <ul class="max-w-md divide-y divide-gray-200 ">
-   <?php
-    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `user_name` = '$username' AND `event_status` = 'unapproved'");
-    while($row = mysqli_fetch_assoc($sql)){
-?>
-            <li class="pb-3 sm:pb-4">
-               <div class="flex items-center space-x-4 ">
-                  <div class="flex-shrink-0">
-                     <img class="w-8 h-8 rounded-full" src="src/images/university.png" alt="Neil image">
-                  </div>
-                  <div class="flex-1 min-w-0">
-                     <p class="text-sm font-medium text-gray-900 truncate">
-                     <?php echo $row['event_name']?>
-                     </p>
-                     <p class="text-sm text-gray-500 truncate ">
-                     <?php echo $row['event_date']?>
-                     </p>
-                  </div>
-                  <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                    <a onclick="approvebtn()"  class="text-lg font-bold text-blue-600 cursor-pointer">Approve</a>
-                  </div>
-               </div>
-            </li>
-
-
-
-
-
-   <div id="model-popup" class="hidden">
-
-     <div  tabindex="-1"  class=" flex item-center items-baseline overflow-y-auto overflow-x-hidden fixed  z-50 justify-center md:items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full top-0 mx-auto">
-            <div class="relative bg-gray-200 rounded-lg shadow py-12 w-full mx-auto ">
-               <p onclick="approvebtn()" class="absolute top-3 end-2.5 text-gray-800 bg-transparent cursor-pointer hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center " ">
-                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                </svg>
-                <span class="sr-only">Close modal</span>
-                 </p>
-                <div class="p-4 md:p-5 text-center">
-                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                </svg>
-                <h3 class="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to Approve this Listing?</h3>
-               
-                <a href="?event_id=<?php echo $row['event_id']; ?>" id="surebtn"  class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center">
-                    Yes, I'm sure
-               </a>
-                <span onclick="approvebtn()"  class="py-2.5 px-5 ms-3 text-sm font-medium text-white focus:outline-none bg-green-400 rounded-lg border cursor-pointer border-gray-200 hover:bg-white hover:text-blue-500 focus:z-10 focus:ring-4 focus:ring-gray-100 ">Go back</span>
-            </div>
+                    while($row = mysqli_fetch_assoc($sql)){
+                ?>
+                <li class="pb-3 sm:pb-4">
+                    <div class="flex items-center space-x-4 py-3">
+                        <div class="flex-shrink-0">
+                            <img class="w-28 md:w-40 rounded-md" src="<?php echo $row['event_img']?>" alt="Neil image">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-base font-semibold text-gray-800 truncate">
+                                <?php echo $row['event_name']?>
+                            </p>
+                            <p class="text-sm text-gray-500 truncate ">
+                                <?php echo $row['event_date']?>
+                            </p>
+                        </div>
+                        <div class="inline-flex items-center text-base font-semibold text-gray-900">
+                            <a href="event-details.php?id=<?php echo urlencode($row['event_id']); ?>" class="text-lg font-bold text-blue-500 px-2 cursor-pointer">View</a>
+                        </div>
+                    </div>
+                </li>
+                <?php
+                    }
+                ?>
+            </ul>
         </div>
-    </div>
-</div>
-</div>
-
-         <?php
-  }
-  ?>
-        </ul>
     </div>
 
 

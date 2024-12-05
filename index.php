@@ -118,7 +118,10 @@ $geojson = json_encode([
   </style>
 </head>
 <body>
-  <div class="grid grid-cols-2 xl:h-screen">
+  <!-- Header starts -->
+  <?php include 'src/component/header.php';?>
+  <!-- Header ends -->
+  <div class="grid grid-cols-2 xl:h-screen -mt-5">
     <!-- Map Section -->
     <div class="col-span-2 xl:col-span-1 h-[55vh] xl:h-screen map-container">
       <div id="map" class="h-full"></div>

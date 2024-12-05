@@ -2376,8 +2376,20 @@ video {
   padding-bottom: 0.25rem;
 }
 
+.pt-5 {
+  padding-top: 1.25rem;
+}
+
+.pt-8 {
+  padding-top: 2rem;
+}
+
 .text-center {
   text-align: center;
+}
+
+.text-start {
+  text-align: start;
 }
 
 .align-bottom {
@@ -2985,6 +2997,10 @@ video {
 
   .md\:w-24 {
     width: 6rem;
+  }
+
+  .md\:w-40 {
+    width: 10rem;
   }
 
   .md\:items-center {

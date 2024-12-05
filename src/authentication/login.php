@@ -188,7 +188,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   
               <p class="mt-4 text-sm text-gray-500 sm:mt-0">
                 Don't have an account?
-                <a href="#" class="text-gray-700 underline">Sign Up</a>.
+                <a href="signup.php" class="text-gray-700 underline">Sign Up</a>.
               </p>
             </div>
           </form>

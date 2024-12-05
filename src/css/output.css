@@ -2037,12 +2037,44 @@ video {
   background-color: rgb(250 204 21 / var(--tw-bg-opacity, 1));
 }
 
-.bg-\[url\(\'\.\.\/images\/university\.png\'\)\] {
-  background-image: url('../images/university.png');
-}
-
 .bg-gradient-to-r {
   background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+.bg-\[url\(\'\/img\/hero-pattern\.svg\'\)\] {
+  background-image: url('/img/hero-pattern.svg');
+}
+
+.bg-\[url\(\'\/\'\)\] {
+  background-image: url('/');
+}
+
+.bg-\[url\(\'\.\.\/im\'\)\] {
+  background-image: url('../im');
+}
+
+.bg-\[url\(\'\.\.\/locationimg\'\)\] {
+  background-image: url('../locationimg');
+}
+
+.bg-\[url\(\'\.\.\/locationimg\/\'\)\] {
+  background-image: url('../locationimg/');
+}
+
+.bg-\[url\(\'\.\.\/locationimg\/bbd\'\)\] {
+  background-image: url('../locationimg/bbd');
+}
+
+.bg-\[url\(\'\.\.\/locationimg\/bbduniversity\.png\'\)\] {
+  background-image: url('../locationimg/bbduniversity.png');
+}
+
+.bg-\[url\(\'src\/locationimg\/bbduniversity\.png\'\)\] {
+  background-image: url('src/locationimg/bbduniversity.png');
+}
+
+.bg-\[url\(\'src\/locationimg\/university\.png\'\)\] {
+  background-image: url('src/locationimg/university.png');
 }
 
 .from-green-300 {
@@ -2722,11 +2754,6 @@ video {
   background-color: rgb(107 33 168 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-red-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-red-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(153 27 27 / var(--tw-bg-opacity, 1));
@@ -2763,11 +2790,6 @@ video {
 .hover\:text-indigo-600:hover {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity, 1));
-}
-
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
 .focus\:z-10:focus {
@@ -2932,6 +2954,10 @@ video {
 
   .md\:w-32 {
     width: 8rem;
+  }
+
+  .md\:w-28 {
+    width: 7rem;
   }
 
   .md\:items-center {

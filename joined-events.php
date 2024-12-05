@@ -92,6 +92,10 @@ if (isset($_GET['event_id'])) {
         <title>EventHive</title>
     </head>
 <body>
+
+  <!-- Header starts -->
+  <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
     <div class="container mx-auto p-5">
         <h1 class="py-3 text-bold text-xl">Event Approval</h1>
 

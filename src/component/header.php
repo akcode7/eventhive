@@ -33,13 +33,13 @@
     <div class="container mx-auto px-2 md:pl-2 md:pr-6 my-2">
         <nav class="flex items-center justify-between">
             <a href="/" class="flex items-center">
-                <img src="https://placehold.co/700x400" alt="Logo" class="w-28 md:w-32 logo">
+                <img src="src/images/logo.png" alt="Logo" class="w-12 w- md:w-28 logo">
             </a>
             <div class="flex space-x-4 md:space-x-10">
                 <ul class="xl:flex space-x-5 mt-1.5 items-center hidden">
-                    <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li>
-                    <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li>
-                    <a href="#" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
+                    <a href="index.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li></a>
+                    <a href="user-account.php"><li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li>
+                    <a href="event-venue.php" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
                 </ul>
                 <button id="hamburger" class=" focus:outline-none">
                     <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -63,9 +63,9 @@
         <nav class="p-4 mt-14 md:mt-20">
             <div class="flex flex-col space-y-6 p-5 text-base">
                 <ul class="space-y-5">
-                    <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li>
-                    <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li>
-                    <a href="#" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
+                   <a href="index.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">HOME</li></a>
+                   <a href="user-account.php"> <li class="text-[15px] font-extrabold text-black hover:text-indigo-600 cursor-pointer">ACCOUNT</li></a>
+                    <a href="event-venue.php" class="hidden md:block text-center w-40 bg-indigo-800 text-xs text-white px-2 py-2 rounded" data-key="nav-contact">CREATE EVENT</a>
                 </ul>
             </div>
         </nav>

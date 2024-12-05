@@ -92,12 +92,15 @@ if (isset($_GET['event_id'])) {
         <title>EventHive</title>
     </head>
 <body>
+       <!-- Header starts -->
+       <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
     <div class="container mx-auto p-5">
         <h1 class="py-3 text-bold text-xl">Event Approval</h1>
 
         <ul class="max-w-md divide-y divide-gray-200 ">
    <?php
-    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `user_name` = '$username' AND `event_status` = 'unapproved'");
+    $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_approver` = '$username' AND `event_status` = 'Unapproved'");
     while($row = mysqli_fetch_assoc($sql)){
 ?>
             <li class="pb-3 sm:pb-4">

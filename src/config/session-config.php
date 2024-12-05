@@ -5,7 +5,7 @@ if (isset($_SESSION['email'])) {
     $email = $_SESSION['email'];
    
 } else {
-    header("location: ../authentication/login.php"); 
+    header("location: src/authentication/login.php"); 
     exit();
 }
 ?>

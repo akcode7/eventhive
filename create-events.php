@@ -1,25 +1,4 @@
 <?php
-<<<<<<< HEAD
-
-
-session_start();
-
-if (isset($_SESSION['email'])) {
-    // Session already exists, user is identified
-    $email = $_SESSION['email'];
-   
-} else {
-    // No session exists, user needs to log in or register
-    header("location: ../authentication/login.php"); 
-    exit();
-}
-?>
-
-<?php
-include 'src/config/db_connect.php';
-
-=======
->>>>>>> 8ada36f90593f3cc8cf716f8df87087f5c3c91d9
 error_reporting(E_ALL);
 ini_set('display_errors', 'On');
 
@@ -66,8 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($stmt->affected_rows > 0) {
      
-    //   header("location: ../../index.php");
-    echo "success";
+    header("location: your-events.php");
        
     } else {
         echo "insert error";
@@ -103,6 +81,10 @@ $conn->close();
     </style>
 </head>
 <body>
+
+  <!-- Header starts -->
+  <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
     <div class="container mx-auto max-w-6xl">
         <section class="bg-white">
             <div class="max-w-2xl px-4 py-8 mx-auto lg:py-16">
@@ -167,7 +149,7 @@ $conn->close();
                         </div>
                         <div class="">
                             <label for="eventlocation" class="block mb-2 text-sm font-medium text-gray-900 ">Event Location</label>
-                            <input type="text" name="eventlocation" id="eventlocation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  value="<?php echo $slug?>" disabled required>
+                            <input type="text" name="eventlocation" id="eventlocation" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "  value="<?php echo $slug?>"  required>
                         </div>
                         <div class="">
                             <label for="eventvenue" class="block mb-2 text-sm font-medium text-gray-900 ">Event Venue</label>

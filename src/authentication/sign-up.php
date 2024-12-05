@@ -21,18 +21,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = md5($_POST['password']);
     $username = $_POST['username'];
-    $marketingaccept = $_POST["marketing_accept"];
      // Get the current Indian time
      $indianTime = new DateTime('now', new DateTimeZone('Asia/Kolkata'));
      $currentIndianTime = $indianTime->format('Y-m-d H:i:s');
 
 
     // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO `user_detail` (`name`, `email`, `password`, `username`, `joining_date`, `marketing_accept`) VALUES (?,?,?,?,?,?);";
+    $sql = "INSERT INTO `user_detail` (`name`, `email`, `password`, `username`, `joining_date`) VALUES (?,?,?,?,?);";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param("ssssss", $name, $email, $password, $username, $currentIndianTime, $marketingaccept);
+    $stmt->bind_param("sssss", $name, $email, $password, $username, $currentIndianTime);
 
     // Execute the statement
     $stmt->execute();
@@ -220,21 +219,7 @@ $conn->close();
             </div>
 
            
-            <div class="col-span-6">
-              <label for="MarketingAccept" class="flex gap-4">
-                <input
-                  type="checkbox"
-                  id="MarketingAccept"
-                  name="marketing_accept"
-                  value="on"
-                  class="size-5 rounded-md border-gray-200 bg-white shadow-sm"
-                />
-  
-                <span class="text-sm text-gray-700">
-                  I want to receive emails about events and announcements.
-                </span>
-              </label>
-            </div>
+            
   
             <div class="col-span-6">
               <p class="text-sm text-gray-500">

@@ -10,6 +10,7 @@
 </head>
 <style>
      .events-venu{
+
         background-repeat: no-repeat;
         background-position: center;
         padding: 20px 0px;
@@ -27,7 +28,8 @@
                 $sql = mysqli_query($conn, "SELECT * FROM `places`");
                 while($row = mysqli_fetch_assoc($sql)){
             ?>
-            <div class="col-span-2 h-48 rounded-lg my-2 overflow-hidden bg-[url('../images/university.png')] events-venu relative">
+            
+            <div class="col-span-2 h-48 rounded-lg my-2 overflow-hidden <?php echo $row['place_img']?> bg-[url('src/locationimg/university.png')] events-venu relative">
                 <p class="font-semibold text-black text-center bg-white text-sm mx-3 py-2 rounded-lg"><?php echo $row['name']?></p>
                 <a href="create-events.php?location=<?php echo $row['name']?>" class="absolute bottom-0 right-0 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300  font-medium rounded-lg text-sm px-3 py-2 me-2 mb-2 mx-1 align-bottom">Create Event</a>
             </div>

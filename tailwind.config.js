@@ -4,7 +4,11 @@ module.exports = {
     "./*.{html,php}",
     "./src/css/**/*.css",],
   theme: {
-    extend: {},
+    extend: {backgroundImage: {
+      'university': "url('src/locationimg/university.png')",
+      'bbditm': "url('src/locationimg/bbditm.png')",
+    }
+  },
   },
   plugins: [],
 }

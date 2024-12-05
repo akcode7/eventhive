@@ -33,6 +33,9 @@ if (empty($slug)) {
     </style>
 </head>
 <body>
+       <!-- Header starts -->
+    <?php include 'src/component/header.php';?>
+    <!-- Header ends -->
 
 <?php
     $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `event_id` = '$slug'");
@@ -52,7 +55,7 @@ if (empty($slug)) {
             <div class="grid grid-cols-3 gap-4">
                 <div class="col-span-3 xl:col-span-2 p-5 border rounded-lg">
                     <div>
-                        <img class="rounded-lg" src="https://unfold2024.devfolio.co/_next/image?url=https%3A%2F%2Fassets.devfolio.co%2Fhackathons%2Fbeea3a652dd04c86b1890bd76bca5451%2Fassets%2Fcover%2F856.jpeg&w=1440&q=100" alt="">
+                        <img class="rounded-lg hidden" src="https://unfold2024.devfolio.co/_next/image?url=https%3A%2F%2Fassets.devfolio.co%2Fhackathons%2Fbeea3a652dd04c86b1890bd76bca5451%2Fassets%2Fcover%2F856.jpeg&w=1440&q=100" alt="">
                     </div>
                     <div class="p-5 border rounded-lg bg-white mt-5">
                         <p class="text-base font-medium text-gray-800"><?php echo $row['event_description']?></p>
@@ -86,12 +89,12 @@ if (empty($slug)) {
                         </div>
                         <div class="border-l-[5px] border-indigo-700">
                             <div class="pl-2">
-                                <p class="text-xl text-gray-900 font-semibold">RUNS FROM</p>
-                                <p class="text-base text-gray-700 font-medium py-1">DEC 1 - 2, 2024</p>
+                                <p class="text-xl text-gray-900 font-semibold">Event Start</p>
+                                <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_start']?></p>
                             </div>
                             <div class="pl-2 pt-4">
-                                <p class="text-xl text-gray-900 font-semibold">Status</p>
-                                <p class="text-base text-gray-700 font-medium py-1">Active</p>
+                                <p class="text-xl text-gray-900 font-semibold">Event End</p>
+                                <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_end']?></p>
                             </div>
                         </div>
                     </div>

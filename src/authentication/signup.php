@@ -16,11 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Use prepared statement to prevent SQL injection
-    $sql = "INSERT INTO `user_detail` (`name`, `email`, `password`, `username`, `joining_date`) VALUES (?,?,?,?,?);";
+    $sql = "INSERT INTO `user_detail` (`name`, `email`, `password`, `username`) VALUES (?,?,?,?);";
     $stmt = $conn->prepare($sql);
 
     // Bind parameters
-    $stmt->bind_param("sssss", $name, $email, $password, $username, $currentIndianTime);
+    $stmt->bind_param("ssss", $name, $email, $password, $username);
 
     // Execute the statement
     $stmt->execute();
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $_SESSION['loggedin'] = true;
       $_SESSION['email'] = $email;
       $_SESSION['username'] = $username;
-      header("location: ../../index.php");
+      header("location: ../../edit-profile.php");
        
     } else {
         echo "insert error";

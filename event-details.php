@@ -143,10 +143,14 @@ if ($result->num_rows > 0) {
                         </div>
                         <div class="border-l-[5px] border-indigo-700">
                             <div class="pl-2">
+                                <p class="text-xl text-gray-900 font-semibold">Event Date</p>
+                                <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_date']?></p>
+                            </div>
+                            <div class="pl-2 pt-2">
                                 <p class="text-xl text-gray-900 font-semibold">Event Start</p>
                                 <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_start']?></p>
                             </div>
-                            <div class="pl-2 pt-4">
+                            <div class="pl-2 pt-2">
                                 <p class="text-xl text-gray-900 font-semibold">Event End</p>
                                 <p class="text-base text-gray-700 font-medium py-1"><?php echo $row['event_end']?></p>
                             </div>

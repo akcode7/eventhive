@@ -1002,6 +1002,10 @@ video {
   margin-top: -1.25rem;
 }
 
+.-mt-\[20px\] {
+  margin-top: -20px;
+}
+
 .mb-1 {
   margin-bottom: 0.25rem;
 }
@@ -1116,10 +1120,6 @@ video {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.-mt-\[20px\] {
-  margin-top: -20px;
 }
 
 .block {
@@ -2315,6 +2315,11 @@ video {
   padding-bottom: 2rem;
 }
 
+.px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .pb-1 {
   padding-bottom: 0.25rem;
 }
@@ -2610,6 +2615,11 @@ video {
   color: rgb(22 101 52 / var(--tw-text-opacity, 1));
 }
 
+.text-indigo-500 {
+  --tw-text-opacity: 1;
+  color: rgb(99 102 241 / var(--tw-text-opacity, 1));
+}
+
 .text-indigo-600 {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity, 1));
@@ -2680,10 +2690,6 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
-.text-white\/90 {
-  color: rgb(255 255 255 / 0.9);
-}
-
 .text-yellow-400 {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity, 1));
@@ -2692,11 +2698,6 @@ video {
 .text-yellow-500 {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity, 1));
-}
-
-.text-indigo-500 {
-  --tw-text-opacity: 1;
-  color: rgb(99 102 241 / var(--tw-text-opacity, 1));
 }
 
 .text-opacity-75 {
@@ -3009,14 +3010,6 @@ video {
     padding-bottom: 1rem;
   }
 
-  .sm\:pb-3 {
-    padding-bottom: 0.75rem;
-  }
-
-  .sm\:pb-2 {
-    padding-bottom: 0.5rem;
-  }
-
   .sm\:text-3xl {
     font-size: 1.875rem;
     line-height: 2.25rem;
@@ -3049,6 +3042,10 @@ video {
     display: block;
   }
 
+  .md\:w-14 {
+    width: 3.5rem;
+  }
+
   .md\:w-2\/5 {
     width: 40%;
   }
@@ -3057,24 +3054,12 @@ video {
     width: 5rem;
   }
 
-  .md\:w-32 {
-    width: 8rem;
-  }
-
-  .md\:w-40 {
-    width: 10rem;
-  }
-
   .md\:w-28 {
     width: 7rem;
   }
 
-  .md\:w-24 {
-    width: 6rem;
-  }
-
-  .md\:w-14 {
-    width: 3.5rem;
+  .md\:w-40 {
+    width: 10rem;
   }
 
   .md\:items-center {
@@ -3220,10 +3205,6 @@ video {
     height: 100vh;
   }
 
-  .xl\:w-24 {
-    width: 6rem;
-  }
-
   .xl\:px-10 {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
@@ -3237,6 +3218,11 @@ video {
   .xl\:py-12 {
     padding-top: 3rem;
     padding-bottom: 3rem;
+  }
+
+  .xl\:px-0 {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 
   .xl\:text-4xl {

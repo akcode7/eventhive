@@ -113,7 +113,7 @@ if ($result->num_rows > 0) {
                         </div>
                     </div>
                 </div>
-                <div class="hidden xl:block col-span-1 py-5">
+                <div class="col-span-3 xl:col-span-1 py-5 px-5 xl:px-0">
                     <div class="bg-white p-6 rounded-lg shadow-xl">
                         <div class="bg-gray-500 h-60 overflow-hidden mb-5 rounded-lg">
                             <img src="<?php echo $row['place_img']?>" alt="" class="bg-cover">
@@ -129,16 +129,16 @@ if ($result->num_rows > 0) {
                             </div>
                         </div>
                         <div class="rounded-lg mt-5 text-center cursor-pointer" id="joinButton">
-    <?php if ($joined): ?>
-        <!-- If user has joined, show 'Joined' and disable the button -->
-        <button class="text-lg font-semibold text-white text-center !bg-indigo-500 w-full h-full py-4 cursor-pointer rounded-lg transition-all duration-300" id="joinButtonText" disabled>Joined</button>
-    <?php else: ?>
-        <!-- If user has not joined, show 'Join Now' and enable the button -->
-        <form method="POST">
-            <button type="submit" class="text-lg font-semibold text-white text-center w-full h-full py-4 bg-indigo-700 hover:bg-yellow-600 rounded-lg  transition-all duration-300" id="joinButtonText">Join Now</button>
-        </form>
-    <?php endif; ?>
-</div>
+                            <?php if ($joined): ?>
+                                <!-- If user has joined, show 'Joined' and disable the button -->
+                                <button class="text-lg font-semibold text-white text-center !bg-indigo-500 w-full h-full py-4 cursor-pointer rounded-lg transition-all duration-300" id="joinButtonText" disabled>Joined</button>
+                            <?php else: ?>
+                                <!-- If user has not joined, show 'Join Now' and enable the button -->
+                                <form method="POST">
+                                    <button type="submit" class="text-lg font-semibold text-white text-center w-full h-full py-4 bg-indigo-700 hover:bg-yellow-600 rounded-lg  transition-all duration-300" id="joinButtonText">Join Now</button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
             </div>

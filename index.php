@@ -60,7 +60,7 @@ $geojson = json_encode([
   <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet" />
   <!-- Include Mapbox GL JS script -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
-  <title>Mapbox Dark Mode</title>
+  <title>EventHive - Home</title>
   <style>
       *{
         margin:0;
@@ -112,9 +112,30 @@ $geojson = json_encode([
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background-color: rgba(230, 9, 9, 0.769);
+      background-color: rgba(230, 9, 9, 0.769); 
       animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
     }
+
+    /* User location marker (blue) */
+    .user-marker {
+      position: relative;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 255, 0.969); 
+    }
+
+    .user-marker-ping {
+      position: absolute;
+      top: -1px;  
+      left: -1px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 255, 0.4);
+      animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
   </style>
 </head>
 <body>
@@ -204,6 +225,7 @@ $geojson = json_encode([
         map.removeSource('bbd-locations');
       }
 
+      // Add points from GeoJSON
       const coordinates = <?php echo $geojson; ?>;
 
       coordinates.features.forEach((feature) => {
@@ -221,7 +243,7 @@ $geojson = json_encode([
           .addTo(map);
       });
 
-      // pointer 
+      // Pointer on hover
       map.on('mouseenter', 'bbd-points', function() {
         map.getCanvas().style.cursor = 'pointer';
       });
@@ -229,7 +251,32 @@ $geojson = json_encode([
       map.on('mouseleave', 'bbd-points', function() {
         map.getCanvas().style.cursor = '';
       });
+
+      // Get user's location and add a blue marker
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const userCoordinates = [position.coords.longitude, position.coords.latitude];
+
+          console.log('User coordinates:', userCoordinates);
+
+          const userEl = document.createElement('div');
+          userEl.className = 'user-marker';
+
+          // ping element for user marker
+          const userPingElement = document.createElement('div');
+          userPingElement.className = 'user-marker-ping';
+          userEl.appendChild(userPingElement);
+
+          new mapboxgl.Marker(userEl)
+            .setLngLat(userCoordinates)
+            .addTo(map);
+
+        }, function(error) {
+          console.error("Error getting location: ", error);  
+        });
+      }
     });
+
   </script>
 
 </body>

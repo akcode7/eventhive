@@ -138,7 +138,7 @@ if ($result->num_rows > 0) {
                 </div>
                 <div class="col-span-3 xl:col-span-1 py-5 px-5 xl:px-0">
                     <div class="bg-white p-6 rounded-lg shadow-xl">
-                        <div class="bg-gray-500 h-60 overflow-hidden mb-5 rounded-lg">
+                        <div class="bg-gray-500 max-h-60 overflow-hidden mb-5 rounded-lg">
                             <img src="<?php echo $row['place_img']?>" alt="" class="bg-cover">
                         </div>
                         <div class="border-l-[5px] border-indigo-700">

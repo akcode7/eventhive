@@ -41,7 +41,7 @@ include 'src/config/db_connect.php';
     <div class="container mx-auto px-4 py-3">
         <h1 class="py-3 text-bold text-2xl text-center">Your Events</h1>
         <div class="flex justify-center items-center mx-auto pt-8">
-            <ul class="max-w-5xl divide-y divide-gray-200 shadow-lg border p-5 w-full">
+            <ul class="max-w-5xl divide-y divide-gray-200 shadow-lg border p-5 w-full overflow-x-scroll">
                 <?php
                     $sql = mysqli_query($conn, "SELECT * FROM `event_detail` WHERE  `user_name` = '$username'");
                     while($row = mysqli_fetch_assoc($sql)){
@@ -51,7 +51,7 @@ include 'src/config/db_connect.php';
                         <div class="flex-shrink-0">
                             <img class="w-28 md:w-40 rounded-md" src="<?php echo $row['event_img']?>" alt="Neil image">
                         </div>
-                        <div class="flex-1 min-w-0">
+                        <div class="flex-1 min-w-min">
                             <p class="text-sm font-medium text-gray-900 truncate">
                                 <?php echo $row['event_name']?>
                             </p>

@@ -91,6 +91,29 @@ if ($result->num_rows > 0) {
                     <div class="p-5 border rounded-lg bg-white mt-5">
                         <p class="text-base font-medium text-gray-800"><?php echo $row['event_description']?></p>
                     </div>
+                    <div class="p-5 border rounded-lg bg-white mt-5">
+                        <p class="text-2xl font-semibold text-gray-800 mb-2">Requirements for joining</p>
+                        <p class="text-base font-medium text-gray-800"><?php echo $row['req_for_joining']?></p>
+                    </div>
+                    <div class="p-5 border rounded-lg mt-5">
+                        <p class="text-2xl font-semibold text-gray-800">Event info</p>
+                        <div class="grid grid-cols-2 gap-4 mt-5">
+                            <div class="col-span-2 xl:col-span-1 bg-white rounded-lg px-5 py-3 shadow">
+                                <div class="">
+                                    <p class="text-xl font-semibold text-gray-900 mb-2">Event type</p>
+                                    
+                                    <p class="text-lg font-medium text-indigo-600"><?php echo $row['event_type']?></p>
+                                </div>
+                            </div>
+                            <div class="col-span-2 xl:col-span-1 bg-white rounded-lg px-5 py-3 shadow">
+                                <div class="">
+                                    <p class="text-xl font-semibold text-gray-900 mb-2">Event venue</p>
+                                    
+                                    <p class="text-lg font-medium text-indigo-600"><?php echo $row['event_venue']?></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="p-5 border rounded-lg mt-5">
                         <p class="text-2xl font-semibold text-gray-800">Hosts</p>
                         <div class="grid grid-cols-2 gap-4 mt-5">

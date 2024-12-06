@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./src/css/output.css">
     <script src="index.js"></script>
-    <title>EventHive</title>
+    <title>EventHive - Edit Event</title>
     <style>
          *{
         margin:0;

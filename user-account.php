@@ -15,7 +15,7 @@ include 'src/config/db_connect.php';
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <script src="index.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>EventHive</title>
+    <title>EventHive - User Account</title>
     <style>
          *{
         margin:0;

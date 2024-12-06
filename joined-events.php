@@ -91,7 +91,7 @@ if (isset($_GET['event_id'])) {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
         <script src="index.js"></script>
-        <title>EventHive</title>
+        <title>EventHive - Joined Event</title>
         <style>
             *{
         margin:0;

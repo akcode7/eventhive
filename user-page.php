@@ -23,7 +23,7 @@ if (empty($slug)) {
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <script src="index.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>EventHive</title>
+    <title>EventHive - User Page</title>
     <style>
          *{
         margin:0;
@@ -49,7 +49,7 @@ if (empty($slug)) {
                         
                 ?>
                 <div class="flex justify-between">
-                    <img class="rounded-lg w-40 h-32 shadow-md" src="<?php echo $row['img']?>" alt="Extra large avatar">
+                    <div class="bg-cover bg-center rounded-xl w-40 h-32 shadow-lg" style="background-image: url('<?php echo $row['img']?>');"></div>
                 <div>
                
                 </div>
